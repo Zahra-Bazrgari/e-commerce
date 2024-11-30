@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="fa" dir='rtl'>
       <body
-        className={`antialiased`}
+        className={`antialiased overflow-x-hidden`}
       >
         {children}
       </body>
