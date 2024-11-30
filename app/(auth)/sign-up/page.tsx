@@ -1,5 +1,6 @@
-import AuthForm from '@/containers/Auth/AuthForm';
+import SignupForm from '@/containers/Auth/SignupForm';
 
-const LogIn:React.FC = () => <AuthForm type="sign-up" />;
+export const SignUp = () => <SignupForm />
 
-export default LogIn;
+
+export default SignUp;

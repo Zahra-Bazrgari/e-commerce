@@ -1,5 +1,6 @@
-import AuthForm from "@/containers/Auth/AuthForm";
+import LoginForm from '@/containers/Auth/LoginForm';
 
-const LogIn:React.FC = () => <AuthForm type='log-in' />;
+export const LogIn:React.FC = async() => <LoginForm />;
+
 
 export default LogIn;
