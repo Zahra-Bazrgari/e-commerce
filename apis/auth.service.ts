@@ -1,18 +1,23 @@
 import { urls } from "@/utils/urls";
-import { generateAxiosInstance } from './axiosInstance';
+import { generateAxiosInstance } from "./axiosInstance";
+import {
+  ILoginRequest,
+  IAuthResponse,
+  ISignUpRequest,
+} from "@/types/auth.types";
 
+type loginFuncType = (data: ILoginRequest) => Promise<IAuthResponse>;
 
-interface ILoginResDto {
-  access_token: string;
-}
-
-interface ILoginReqDto {
-  refresh_token: string;
-}
-
-type loginFuncType = (_: ILoginReqDto) => Promise<ILoginResDto>;
-export const login: loginFuncType = async (body) => {
-  const client = generateAxiosInstance();
+export const logInFunction: loginFuncType = async (body) => {
+  const client = generateAxiosInstance;
   const response = await client.post(urls.auth.login, body);
+  return response.data;
+};
+
+type signUpFuncType = (data: ISignUpRequest) => Promise<IAuthResponse>;
+
+export const signUpFunction: signUpFuncType = async (body) => {
+  const client = generateAxiosInstance;
+  const response = await client.post(urls.auth.signup, body);
   return response.data;
 };
