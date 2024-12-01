@@ -1,4 +1,5 @@
 export interface IProduct {
+  _id: string;
   category: string;
   subcategory: string;
   name: string;
@@ -6,11 +7,13 @@ export interface IProduct {
   quantity: number;
   brand: string;
   description: string;
-  rating: number;
+  thumbnail: string;
+  images: string[];
+  slugname: string;
 }
 
 export interface IFetchProductsResponse {
-  status: string; 
+  status: string;
   page: number;
   per_page: number;
   total: number;
@@ -27,4 +30,3 @@ export interface IFetchProductsParams {
   sort?: string;
   quantity?: { [key: string]: number };
 }
-

@@ -1,31 +1,23 @@
 import { generateAxiosInstance } from "./axiosInstance";
-import { IFetchProductsParams } from "@/types/fetchProducts.types";
+import { IFetchProductsParams, IFetchProductsResponse } from "@/types/fetchProducts.types";
 
+type FetchProductsFuncType = (_: IFetchProductsParams) => Promise<IFetchProductsResponse>;
 
-export const fetchProducts = async ({page = 1, limit = 10, fields, sort, quantity}: IFetchProductsParams) => {
+export const fetchProducts: FetchProductsFuncType = async ({ page = 1, limit = 10, fields, sort, quantity }) => {
   const axiosInstance = generateAxiosInstance();
-
   const queryParams = new URLSearchParams();
 
   if (page) queryParams.append("page", page.toString());
-  
   if (limit) queryParams.append("limit", limit.toString());
   if (fields) queryParams.append("fields", fields);
   if (sort) queryParams.append("sort", sort);
 
   if (quantity) {
-    for (const [key, value] of Object.entries(quantity)) {
+    Object.entries(quantity).forEach(([key, value]) => {
       queryParams.append(`quantity[${key}]`, value.toString());
-    }
+    });
   }
 
-  try {
-    const response = await axiosInstance.get(
-      `/products?${queryParams.toString()}`
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching products:", error);
-    throw error;
-  }
+  const response = await axiosInstance.get<IFetchProductsResponse>(`/api/products?${queryParams.toString()}`);
+  return response.data;
 };

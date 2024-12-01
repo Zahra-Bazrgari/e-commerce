@@ -1,29 +1,12 @@
-import { useQuery, UseQueryOptions } from "react-query";
+import { useQuery } from "react-query";
 import { fetchProducts } from "@/apis/products.service";
-import {
-  IFetchProductsParams,
-  IFetchProductsResponse,
-} from "@/types/fetchProducts.types";
+import { IFetchProductsParams, IFetchProductsResponse } from "@/types/fetchProducts.types";
 
-type UseFetchProductsOptions = UseQueryOptions<
-  IFetchProductsResponse,
-  Error,
-  IFetchProductsResponse,
-  [string, IFetchProductsParams?]
->;
-
-export const useFetchProducts = (
-  params: IFetchProductsParams,
-  options?: UseFetchProductsOptions
-) => {
-  return useQuery<
-    IFetchProductsResponse,
-    Error,
-    IFetchProductsResponse,
-    [string, IFetchProductsParams?]
-  >(["fetchProducts", params], () => fetchProducts(params), {
+export const useFetchProducts = (params: IFetchProductsParams) => {
+  return useQuery<IFetchProductsResponse>({
+    queryKey: ["products", params],
+    queryFn: () => fetchProducts(params),
     keepPreviousData: true,
-    retry: 2,
-    ...options,
+    staleTime: 5 * 60 * 1000, // Cache data for 5 minutes
   });
 };
