@@ -10,7 +10,7 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div className='glassmorphism-navbar w-[90%] fixed top-1 flex items-center justify-between px-6 py-3 rounded-xl z-50'>
+    <div className='glassmorphism-navbar w-screen max-w-[1990px] fixed top-1 flex items-center justify-between px-6 py-3 rounded-xl z-50'>
       <div className='flex items-center justify-center gap-x-2'>
         <Image
           src='/logo/light-mode-logo.png'
