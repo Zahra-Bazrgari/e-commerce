@@ -1,18 +1,20 @@
 import { generateAxiosInstance } from "./axiosInstance";
 import { IFetchProductsParams } from "@/types/fetchProducts.types";
 
-export const fetchProducts = async (params: IFetchProductsParams) => {
+
+export const fetchProducts = async ({page = 1, limit = 10, fields, sort, quantity}: IFetchProductsParams) => {
   const axiosInstance = generateAxiosInstance();
 
   const queryParams = new URLSearchParams();
 
-  if (params.page) queryParams.append("page", params.page.toString());
-  if (params.limit) queryParams.append("limit", params.limit.toString());
-  if (params.fields) queryParams.append("fields", params.fields);
-  if (params.sort) queryParams.append("sort", params.sort);
+  if (page) queryParams.append("page", page.toString());
+  
+  if (limit) queryParams.append("limit", limit.toString());
+  if (fields) queryParams.append("fields", fields);
+  if (sort) queryParams.append("sort", sort);
 
-  if (params.quantity) {
-    for (const [key, value] of Object.entries(params.quantity)) {
+  if (quantity) {
+    for (const [key, value] of Object.entries(quantity)) {
       queryParams.append(`quantity[${key}]`, value.toString());
     }
   }
