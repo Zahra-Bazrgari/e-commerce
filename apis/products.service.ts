@@ -1,3 +1,4 @@
+import { urls } from '@/utils/urls';
 import { generateAxiosInstance } from "./axiosInstance";
 import { IFetchProductsParams, IFetchProductsResponse } from "@/types/fetchProducts.types";
 
@@ -18,6 +19,6 @@ export const fetchProducts: FetchProductsFuncType = async ({ page = 1, limit = 1
     });
   }
 
-  const response = await axiosInstance.get<IFetchProductsResponse>(`/api/products?${queryParams.toString()}`);
+  const response = await axiosInstance.get<IFetchProductsResponse>(`${urls.products.fetch}?${queryParams.toString()}`);
   return response.data;
 };

@@ -1,15 +1,15 @@
 export interface IProduct {
   _id: string;
   category: string;
-  subcategory: string;
+  subcategory: string | undefined;
   name: string;
   price: number;
   quantity: number;
   brand: string;
   description: string;
-  thumbnail: string;
+  thumbnail?: string;
   images: string[];
-  slugname: string;
+  slugname?: string;
 }
 
 export interface IFetchProductsResponse {

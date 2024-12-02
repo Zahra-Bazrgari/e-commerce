@@ -7,6 +7,6 @@ export const useFetchProducts = (params: IFetchProductsParams) => {
     queryKey: ["products", params],
     queryFn: () => fetchProducts(params),
     keepPreviousData: true,
-    staleTime: 5 * 60 * 1000, // Cache data for 5 minutes
+    staleTime: 5 * 60 * 1000, // chache data for 5 minutes
   });
 };
