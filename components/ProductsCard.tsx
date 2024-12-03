@@ -20,7 +20,7 @@ const ProductsCard = ({
       <div className='bg-bs-white hover:shadow-2xl rounded-md text-bs-gray-dark p-4 grid grid-cols-1 gap-2'>
         <div className='rounded-md'>
           <Image
-            src={"/coffespot-1.jpg"}
+            src={`http://localhost:8000/images/products/images/${images[0]}`}
             alt={name}
             width={1000}
             height={1000}
