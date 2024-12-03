@@ -6,5 +6,6 @@ export const urls = {
   },
   products: {
     fetch: "/products"
-  }
+  },
+  orders: "/orders"
 };
