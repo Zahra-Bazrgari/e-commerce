@@ -1,95 +1,94 @@
-// "use client"
-// import { useFetchOrders } from '@/hooks/useQuery/useFetchOrders';
-// import React, { useState } from "react";
+"use client";
+
+import { useFetchOrdersWithDetails } from "@/hooks/useQuery/useFetchOrders";
+import React, { useState } from "react";
+
+const OrdersTable = () => {
+  const [page, setPage] = useState<number>(1);
+  const [limit] = useState<number>(5);
+
+  const { data, isLoading, isError } = useFetchOrdersWithDetails(page, limit);
+
+  if (isLoading) return <div className="text-center py-8">در حال بارگذاری...</div>;
+  if (isError) return <div className="text-center text-red-500 py-8">خطا در دریافت سفارش‌ها.</div>;
+
+  const { detailedOrders, totalPages } = data || { detailedOrders: [], totalPages: 0 };
+
+  return (
+    <div>
+      <h1 className="text-2xl font-bold mb-6">سفارش‌ها</h1>
+
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white border-collapse shadow-xl rounded-lg">
+          <thead className="bg-gray-100 text-gray-800">
+            <tr>
+              <th className="px-4 py-2 text-center font-medium">شماره سفارش</th>
+              <th className="px-4 py-2 text-center font-medium">کاربر</th>
+              <th className="px-4 py-2 text-center font-medium">مبلغ کل</th>
+              <th className="px-4 py-2 text-center font-medium">وضعیت تحویل</th>
+              <th className="px-4 py-2 text-center font-medium">محصولات</th>
+              <th className="px-4 py-2 text-center font-medium">آدرس</th>
+            </tr>
+          </thead>
+          <tbody>
+            {detailedOrders.map((order, index) => (
+              <tr
+                key={order._id}
+                className={`${
+                  index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                } border-b`}
+              >
+                <td className="px-4 py-2 text-center">{order._id}</td>
+                <td className="px-4 py-2 text-center">
+                  {`${order.user.firstname} ${order.user.lastname}`}
+                </td>
+                <td className="px-4 py-2 text-center">تومان {order.totalPrice}</td>
+                <td className="px-4 py-2 text-center">
+                  <span
+                    className={`px-2 py-1 rounded-md text-sm ${
+                      order.deliveryStatus
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
+                    }`}
+                  >
+                    {order.deliveryStatus ? "تحویل داده شده" : "در انتظار"}
+                  </span>
+                </td>
+                <td className="px-4 py-2 text-center">
+                  <ul style={{ listStyle: "none" }}>
+                    {order.products.map((product) => (
+                      <li key={product._id}>{product.product.name} (x{product.count})</li>
+                    ))}
+                  </ul>
+                </td>
+                <td>{order.user.address}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {totalPages > 1 && (
+        <div className="mt-6 flex justify-center items-center gap-2">
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index + 1}
+            onClick={() => setPage(index + 1)}
+            className={`px-4 py-2 rounded-full border transition-all text-sm ${
+              page === index + 1
+                ? " text-bs-blue shadow-md font-bold "
+                : " text-bs-black"
+            }`}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
+      )}
 
 
-// const OrdersPage = () => {
-//   const [page, setPage] = useState(1);
-//   const limit = 10;
+    </div>
+  );
+};
 
-//   const { data, isLoading, isError } = useFetchOrders(page, limit);
-
-//   if (isLoading) return <div>Loading orders...</div>;
-//   if (isError) return <div>Failed to load orders. Please try again.</div>;
-
-//   const orders = data?.data?.orders || [];
-//   const totalPages = data?.total_pages || 1;
-
-//   return (
-//     <div className="p-4">
-//       <h1 className="text-2xl font-bold mb-4">Orders</h1>
-
-//       <table className="min-w-full bg-white border border-gray-200">
-//         <thead>
-//           <tr>
-//             <th className="border px-4 py-2">Order ID</th>
-//             <th className="border px-4 py-2">User</th>
-//             <th className="border px-4 py-2">Products</th>
-//             <th className="border px-4 py-2">Total Price</th>
-//             <th className="border px-4 py-2">Delivery Date</th>
-//             <th className="border px-4 py-2">Delivery Status</th>
-//           </tr>
-//         </thead>
-//         <tbody>
-//           {orders.map((order: any) => (
-//             <tr key={order._id}>
-//               <td className="border px-4 py-2">{order._id}</td>
-//               <td className="border px-4 py-2">{order.user}</td>
-//               <td className="border px-4 py-2">
-//                 {order.products.map((product: any, index: number) => (
-//                   <div key={index}>
-//                     <p>Product ID: {product.product}</p>
-//                     <p>Count: {product.count}</p>
-//                   </div>
-//                 ))}
-//               </td>
-//               <td className="border px-4 py-2">{order.totalPrice}</td>
-//               <td className="border px-4 py-2">
-//                 {new Date(order.deliveryDate).toLocaleDateString()}
-//               </td>
-//               <td className="border px-4 py-2">
-//                 {order.deliveryStatus ? "Delivered" : "Pending"}
-//               </td>
-//             </tr>
-//           ))}
-//         </tbody>
-//       </table>
-
-//       <div className="mt-4 flex justify-center space-x-4">
-//         <button
-//           disabled={page === 1}
-//           onClick={() => setPage((prev) => prev - 1)}
-//           className={`px-4 py-2 rounded bg-gray-800 text-white ${
-//             page === 1 ? "opacity-50 cursor-not-allowed" : ""
-//           }`}
-//         >
-//           Previous
-//         </button>
-//         {Array.from({ length: totalPages }, (_, i) => (
-//           <button
-//             key={i + 1}
-//             onClick={() => setPage(i + 1)}
-//             className={`px-4 py-2 rounded ${
-//               page === i + 1
-//                 ? "bg-blue-500 text-white"
-//                 : "bg-gray-200 text-gray-800 hover:bg-gray-300"
-//             }`}
-//           >
-//             {i + 1}
-//           </button>
-//         ))}
-//         <button
-//           disabled={page === totalPages}
-//           onClick={() => setPage((prev) => prev + 1)}
-//           className={`px-4 py-2 rounded bg-gray-800 text-white ${
-//             page === totalPages ? "opacity-50 cursor-not-allowed" : ""
-//           }`}
-//         >
-//           Next
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default OrdersPage;
+export default OrdersTable;
