@@ -38,7 +38,13 @@ const LoginForm: React.FC = () => {
 
       setSession(accessToken);
       setRole(role);
-      router.push("/");
+
+      if(role === "ADMIN") {
+        router.push("/admin")
+      } else {
+        router.push("/");
+      }
+      
     }
   }, [login.isSuccess, login.data, router]);
 
