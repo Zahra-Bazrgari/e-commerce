@@ -1,6 +1,11 @@
 export const urls = {
   auth: {
-    login: "/api/auth/login",
-    signup: "/api/auth/signup",
+    login: "auth/login",
+    signup: "auth/signup",
+    token: "/token",
   },
+  products: {
+    fetch: "/products"
+  },
+  orders: "/orders"
 };

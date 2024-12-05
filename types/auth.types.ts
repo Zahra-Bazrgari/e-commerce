@@ -16,7 +16,7 @@ export interface IUser {
   password: string;
   phoneNumber: string;
   address: string;
-  role: IRole;
+  role: string;
   createdAt: string;
   updatedAt: string;
   __v: number;
