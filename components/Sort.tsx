@@ -10,7 +10,7 @@ const Sort = ({ setSort }: Props) => {
   const [isSortModalOpen, setIsSortModalOpen] = useState<boolean>(false);
 
   return (
-    <div className='ّtext-bs-black'>
+    <div className="ّtext-bs-black">
       <h2
         className={`flex gap-1 cursor-pointer text-lg ${
           isSortModalOpen ? "text-bs-blue" : "text-black"
