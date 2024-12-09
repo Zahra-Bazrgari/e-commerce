@@ -1,37 +1,79 @@
-"use client";
-import { useFetchProducts } from "@/hooks/useQuery/useFetchProducts";
 import React, { useState } from "react";
+import { useFetchProducts } from "@/hooks/useQuery/useFetchProducts";
+import Pagination from "@/components/Pagination";
+import Table from "@/components/Table";
 import Filter from "@/components/Filter";
 import Sort from "@/components/Sort";
+import { IProduct } from "@/types/fetchProducts.types";
+import ProductModal from "@/components/ProductModal";
+import deleteProduct from '@/apis/products.service';
 
 
 const ProductsTable = () => {
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState<string | undefined>(undefined);
-  const [quantityFilter, setQuantityFilter] = useState<{
-    key: string;
-    value: number;
-  } | null>(null);
+  const [quantityFilter, setQuantityFilter] = useState<{ key: string; value: number } | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const limit = 10;
+  const quantity = quantityFilter !== null ? { [quantityFilter.key]: quantityFilter.value } : undefined;
 
-  const quantity =
-    quantityFilter !== null
-      ? { [quantityFilter.key]: quantityFilter.value }
-      : undefined;
-
-  const { data, isLoading, isError } = useFetchProducts({
+  const { data, isLoading, isError, refetch } = useFetchProducts({
     page,
     limit,
     sort,
     quantity,
   });
 
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error fetching products.</div>;
+  if (isLoading) return <div className="text-center py-8">در حال بارگذاری...</div>;
+  if (isError) return <div className="text-center text-red-500 py-8">خطا در دریافت محصولات.</div>;
 
   const products = data?.data.products || [];
   const totalPages = data?.total_pages || 1;
+
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteProduct(id);
+      console.log(`Product ${id} deleted successfully`);
+      refetch();
+    } catch (error: any) {
+      console.log("Error deleting the product:", error.message);
+    }
+  };
+
+  const columns = [
+    { label: "نام محصول", render: (product: IProduct) => product.name },
+    { label: "قیمت", render: (product: IProduct) => product.price },
+    { label: "موجودی", render: (product: IProduct) => product.quantity },
+    {
+      label: "وضعیت",
+      render: (product: IProduct) => (
+        <span
+          className={`${
+            product.quantity > 0 ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+          } rounded-md px-2`}
+        >
+          {product.quantity > 0 ? "موجود" : "ناموجود"}
+        </span>
+      ),
+    },
+    { label: "برند", render: (product: IProduct) => product.brand },
+    {
+      label: "حذف",
+      render: (product: IProduct) => (
+        <button
+          onClick={() => handleDelete(product._id)}
+          className="text-red-600 hover:text-red-800"
+          title="Delete"
+        >
+          🗑️
+        </button>
+      ),
+    },
+  ];
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   return (
     <div>
@@ -42,63 +84,25 @@ const ProductsTable = () => {
         <Filter setQuantityFilter={setQuantityFilter} />
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border-collapse shadow-2xl">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="px-4 py-2 text-center font-medium">نام محصول</th>
-              <th className="px-4 py-2 text-center font-medium">قیمت</th>
-              <th className="px-4 py-2 text-center font-medium">موجودی</th>
-              <th className="px-4 py-2 text-center font-medium">وضعیت</th>
-              <th className="px-4 py-2 text-center font-medium">برند</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((product, index) => (
-              <tr
-                key={product._id}
-                className={`${
-                  index % 2 === 0 ? "bg-gray-50" : "bg-white"
-                } border-b`}
-              >
-                <td className="px-4 text-center py-2">{product.name}</td>
-                <td className="px-4 text-center py-2">{product.price}</td>
-                <td className="px-4 text-center py-2">{product.quantity}</td>
-                <td className="px-4 text-center py-2">
-                  <span
-                    className={`${
-                      product.quantity > 0
-                        ? "bg-green-100 text-green-800"
-                        : "bg-red-100 text-red-800"
-                    } rounded-md px-2`}
-                  >
-                    {product.quantity > 0 ? "موجود" : "ناموجود"}
-                  </span>
-                </td>
-                <td className="px-4 text-center py-2">{product.brand}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="mb-4">
+        <button
+          onClick={openModal}
+          className="bg-green-500 text-white py-2 px-4 rounded-md"
+        >
+          افزودن محصول جدید
+        </button>
       </div>
 
-      {totalPages > 1 && (
-        <div className="mt-6 flex justify-center items-center gap-2">
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            key={index + 1}
-            onClick={() => setPage(index + 1)}
-            className={`px-4 py-2 rounded-full border transition-all text-sm ${
-              page === index + 1
-                ? " text-bs-blue shadow-md font-bold "
-                : " text-bs-black"
-            }`}
-          >
-            {index + 1}
-          </button>
-        ))}
-      </div>
-      )}
+      <Table
+        data={products}
+        columns={columns}
+        noDataMessage="هیچ محصولی یافت نشد"
+        rowKey={(product) => product._id}
+      />
+
+      <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
+
+      <ProductModal isOpen={isModalOpen} onClose={closeModal} />
     </div>
   );
 };

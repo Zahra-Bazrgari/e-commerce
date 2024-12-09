@@ -1,4 +1,5 @@
 "use client"
+import DeliveryTable from '@/containers/DeliveryTableContainer'
 import SalesChartsContainer from '@/containers/SalesChartsContainer'
 import { getRole } from '@/utils/role-manager'
 import { redirect } from 'next/navigation'
@@ -15,6 +16,7 @@ const page = () => {
   return (
     <div className='container mx-auto py-4'>
       <SalesChartsContainer />
+      <DeliveryTable />
     </div>
   )
 }

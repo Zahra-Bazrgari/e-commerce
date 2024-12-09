@@ -3,16 +3,16 @@ import { OrderDetails, OrdersResponse } from '@/types/orders.type';
 import { useQuery } from 'react-query';
 
 
-export const useFetchOrders = (page: number, limit: number) => {
+export const useFetchOrders = (page: number, limit?: number) => {
   return useQuery<OrdersResponse>({
     queryKey: ["orders", page, limit],
-    queryFn: () => fetchOrders(page, limit),
+    queryFn: () => fetchOrders(page, limit), 
     keepPreviousData: true,
     staleTime: 5 * 60 * 1000,
   });
 };
 
-export const useFetchOrdersWithDetails = (page: number, limit: number) => {
+export const useFetchOrdersWithDetails = (page: number, limit?: number) => {
   return useQuery<{
     detailedOrders: OrderDetails[];
     totalPages: number;
@@ -37,4 +37,3 @@ export const useFetchOrdersWithDetails = (page: number, limit: number) => {
     staleTime: 5 * 60 * 1000,
   });
 };
-

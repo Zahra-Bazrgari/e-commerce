@@ -10,7 +10,6 @@ export interface IProduct {
   thumbnail?: string;
   images: string[];
   slugname?: string;
-  rating: Rating;
 }
 
 export interface IFetchProductsResponse {

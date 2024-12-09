@@ -6,7 +6,7 @@ import WeeklyChart from "@/components/charts/WeeklyChart";
 import PieChart from "@/components/charts/DeliveryChart";
 
 const OrdersChart = () => {
-  const { data, isLoading, error } = useFetchOrders(1, 100);
+  const { data, isLoading, error } = useFetchOrders(1);
 
   if (isLoading) {
     return <p>Loading...</p>;
