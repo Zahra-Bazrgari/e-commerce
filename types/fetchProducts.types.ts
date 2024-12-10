@@ -12,7 +12,7 @@ export interface IProduct {
   slugname?: string;
 }
 
-export interface IFetchProductsResponse {
+export interface IProductsResponse {
   status: string;
   page: number;
   per_page: number;
@@ -31,10 +31,10 @@ export interface IFetchProductsParams {
   quantity?: { [key: string]: number };
 }
 
-type Rating = {
+export interface Rating {
   rate: number;
   count: number;
-};
+}
 
 export interface IAddProducts {
   category: string;

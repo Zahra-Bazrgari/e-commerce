@@ -1,5 +1,5 @@
 "use client"
-import OrdersPage from "@/containers/OrdersTableContainer";
+import OrdersPage from "@/containers/Admin/OrdersTableContainer";
 import { getRole } from "@/utils/role-manager";
 import { redirect } from 'next/navigation';
 
