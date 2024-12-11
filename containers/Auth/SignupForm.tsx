@@ -120,7 +120,7 @@ const SignupForm: React.FC = () => {
         ثبت نام
         {signUp.isLoading && (
           <Image
-            src="/assets/icons/loader.svg"
+            src="/icons/loader.svg"
             alt="loader"
             width={24}
             height={24}

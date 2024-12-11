@@ -13,6 +13,7 @@ import {
   Search,
 } from "lucide-react";
 import { useToggleState } from "@/hooks/useToggleState";
+import { getRole } from '@/utils/role-manager';
 
 const PRODUCTS = [
   { label: "پوشاک زنانه", path: "/products/female" },
