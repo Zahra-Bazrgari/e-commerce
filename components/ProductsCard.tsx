@@ -2,7 +2,7 @@ import React from "react";
 import { IProduct } from "@/types/fetchProducts.types";
 import Image from "next/image";
 import Link from "next/link";
-import { CircleAlert } from "lucide-react";
+import { CircleAlert, Heart, ShoppingBag } from "lucide-react";
 
 const ProductsCard = ({
   _id,
@@ -17,7 +17,7 @@ const ProductsCard = ({
 }: IProduct) => {
   return (
     <Link href={`/products/${_id}`}>
-      <div className='bg-bs-white hover:shadow-2xl rounded-md text-bs-gray-dark p-4 grid grid-cols-1 gap-2'>
+      <div className='bg-bs-white hover:shadow-2xl rounded-md text-bs-gray-dark p-4 grid grid-cols-1 gap-2 w-fit'>
         <div className='rounded-md'>
           <Image
             src={`http://localhost:8000/images/products/images/${images[0]}`}
@@ -50,9 +50,15 @@ const ProductsCard = ({
           <div className='text-left font-medium w-full'>{price} تومان</div>
         )}
 
-        <button className='bg-bs-blue mt-3 text-white py-1 rounded-lg'>
-          افزودن به سبد خرید
-        </button>
+        <div className='w-full flex items-center border-2 border-black h-fit rounded-[33px]'>
+          <button className='bg-black text-white py-1 rounded-3xl w-full flex items-center justify-center gap-3'>
+            <ShoppingBag size={18} />
+            افزودن به سبد خرید
+          </button>
+          <div className='flex items-center justify-center text-center w-[30%]'>
+            <Heart />
+          </div>
+        </div>
       </div>
     </Link>
   );

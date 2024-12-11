@@ -4,8 +4,10 @@ import { useFetchProducts } from "@/hooks/useQuery/useFetchProducts";
 import React, { useState } from "react";
 import Filter from "@/components/Filter";
 import Sort from "@/components/Sort";
+import Pagination from '@/components/Pagination';
 
 const ProductList = () => {
+  const [page, setPage] = useState(1);
   const [sort, setSort] = useState<string | undefined>(undefined);
   const [quantityFilter, setQuantityFilter] = useState<{
     key?: string;
@@ -14,7 +16,6 @@ const ProductList = () => {
 
   const { data, isLoading, isError } = useFetchProducts({
     page: 1,
-    limit: 4,
     sort,
     quantity:
       quantityFilter.key !== undefined
@@ -25,14 +26,14 @@ const ProductList = () => {
         : undefined,
   });
 
+  const totalPages = data?.total_pages || 1;
+
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error fetching products</div>;
 
   return (
     <div className='p-3'>
       <h1 className='font-bold mb-2 text-2xl'>لیست محصولات</h1>
-
-      {/* pagination and closing modal left */}
 
       <div className='flex items-center gap-10 my-4'>
         <Sort setSort={setSort} />
@@ -150,6 +151,12 @@ const ProductList = () => {
           />
         ))}
       </div>
+
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+      />
     </div>
   );
 };

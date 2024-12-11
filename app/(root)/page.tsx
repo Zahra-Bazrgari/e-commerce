@@ -6,7 +6,6 @@ import QueryClientWrapper from "@/providers/QueryClient";
 
 const Home = () => {
   return (
-    <QueryClientWrapper>
       <div className='container mx-auto'>
         <div className='w-full flex items-center justify-center flex-col relative'>
           <HeroSection />
@@ -24,7 +23,6 @@ const Home = () => {
 
         <LastFiveProducts />
       </div>
-    </QueryClientWrapper>
   );
 };
 

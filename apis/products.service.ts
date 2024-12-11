@@ -136,3 +136,25 @@ export const updateProduct: UpdateProductFuncType = async (
     };
   }
 };
+
+
+// Get Product By Id
+
+export type FetchProductByIdFuncType = (id: string) => Promise<IProduct>;
+
+export const fetchProductById: FetchProductByIdFuncType = async (id) => {
+  try {
+    const response = await axios.get<{ status: string; data: { product: IProduct } }>(
+      `${urls.products}/${id}`
+    );
+
+    if (response.data.status !== 'success') {
+      throw new Error('Failed to fetch product');
+    }
+
+    return response.data.data.product;
+  } catch (error) {
+    console.error('Error fetching product by ID:', error);
+    throw error;
+  }
+};

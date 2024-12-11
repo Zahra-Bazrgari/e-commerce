@@ -16,11 +16,10 @@ const page = () => {
     
 
   return (
-    <QueryClientWrapper>
     <div className='container mx-auto py-4'>
       <SalesChartsContainer />
       <DeliveryTable />
-    </div></QueryClientWrapper>
+    </div>
   )
 }
 

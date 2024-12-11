@@ -9,6 +9,6 @@ export const useFetchProducts = (params: IFetchProductsParams) => {
   return useQuery<IProductsResponse>({
     queryKey: ["products", params],
     queryFn: () => fetchProducts(params),
-    staleTime: 5 * 60 * 1000, // chache data for 5 minutes
+    staleTime: 5 * 60 * 1000,
   });
 };
