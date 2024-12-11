@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react";
+import React, { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 export const queryClient = new QueryClient();
