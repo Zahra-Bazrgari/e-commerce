@@ -1,4 +1,5 @@
-import LoginForm from '@/containers/Auth/LogInForm';
+import LoginForm from '@/containers/Auth/Log-inForm';
+
 
 export const LogIn:React.FC = async() => <LoginForm />;
 
