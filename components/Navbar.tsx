@@ -173,7 +173,16 @@ const Navbar = () => {
               </div>
             )}
             <Link href='/' onClick={() => setMenuOpen()}>
-              خانه
+              <span
+                className={`block hover:bg-gray-200 rounded-md px-4 py-2 ${
+                  activePath === "/"
+                    ? "border-b-2 border-blue-400"
+                    : "border-none"
+                }`}
+                onClick={() => setActivePath("/")}
+              >
+                خانه
+              </span>
             </Link>
 
             {PRODUCTS.map((product) => (
