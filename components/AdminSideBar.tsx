@@ -3,7 +3,7 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import { LayoutDashboard, Menu, PlusSquare, X } from "lucide-react";
+import { Home, LayoutDashboard, Menu, PlusSquare, X } from "lucide-react";
 import { useToggleState } from "@/hooks/useToggleState";
 import { CreditCard } from "lucide-react";
 import { ShoppingBag } from "lucide-react";
@@ -13,6 +13,7 @@ const Sidebar = () => {
   const pathname = usePathname();
 
   const navItems = [
+    { name: "خانه", path: "", icon: <Home width={22} /> },
     { name: "داشبورد", path: "admin", icon: <LayoutDashboard width={22} /> },
     {
       name: "محصولات",

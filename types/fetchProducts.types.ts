@@ -1,7 +1,7 @@
 export interface IProduct {
   _id: string;
   category: string;
-  subcategory: string | undefined;
+  subcategory?: string;
   name: string;
   price: number;
   quantity: number;
@@ -10,10 +10,13 @@ export interface IProduct {
   thumbnail?: string;
   images: string[];
   slugname?: string;
+  rating?: Rating;
+  createdAt?: string; 
+  updatedAt?: string;
 }
 
 export interface IProductsResponse {
-  status: string;
+  status: "success" | "error";
   page: number;
   per_page: number;
   total: number;
@@ -28,7 +31,7 @@ export interface IFetchProductsParams {
   limit?: number;
   fields?: string;
   sort?: string;
-  quantity?: { [key: string]: number };
+  quantity?: Record<string, number>;
 }
 
 export interface Rating {
