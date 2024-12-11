@@ -1,6 +1,6 @@
 "use client"
 import React from "react";
-import ProductsTable from "@/containers/ProductsTable";
+import ProductsTable from "@/containers/Admin/ProductsTable";
 import { getRole } from "@/utils/role-manager";
 import { redirect } from 'next/navigation';
 
