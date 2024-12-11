@@ -2,17 +2,9 @@ export const urls = {
   auth: {
     login: "auth/login",
     signup: "auth/signup",
-<<<<<<< HEAD
     token: "/token",
   },
   products: "/products",
-  orders: "/orders"
-};
-=======
-  },
-  products: {
-    fetch: "/products"
-  },
+  orders: "/orders",
   subCategory: "/subcategories"
 };
->>>>>>> products
