@@ -1,34 +1,52 @@
 "use client";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination, Navigation } from "swiper/modules";
+import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+
 import "../styles/swiper.css";
 
-import MaleCard from "@/components/slider/MaleCard";
-import FemaleCard from "@/components/slider/FemaleCard";
+import ModelCard from "@/components/slider/ModelLgCard";
+import ModelSmCard from "@/components/slider/ModelSmCard";
 
-const SwiperContainer = () => {
+
+const SwiperContainer = ({ type }: { type: "sm" | "lg" }) => {
   return (
-    <div className='container w-fit'>
+    <div className={`w-full ${type === "lg" ? "p-16 md:p-36" : "p-8"}`}>
       <Swiper
-        navigation
-        modules={[Navigation, Pagination]}
-        pagination={{ type: 'bullets' }}
+        modules={[Pagination, Autoplay]}
+        pagination={{ type: "fraction" }}
         loop={true}
-        className='rounded-3xl'
+        autoplay={{ delay: 5000, disableOnInteraction: false }}
+        className="rounded-3xl"
+        spaceBetween={20}
       >
-        <SwiperSlide>
-          <MaleCard />
-        </SwiperSlide>
-        <SwiperSlide>
-          <FemaleCard />
-        </SwiperSlide>
-        <SwiperSlide>
-          <MaleCard />
-        </SwiperSlide>
-        <SwiperSlide>
-          <FemaleCard />
-        </SwiperSlide>
+        {type === "lg" ? (
+          <>
+            <SwiperSlide>
+              <ModelCard type="male" />
+            </SwiperSlide>
+            <SwiperSlide>
+              <ModelCard type="female" />
+            </SwiperSlide>
+            <SwiperSlide>
+              <ModelCard type="all" />
+            </SwiperSlide>
+          </>
+        ) : (
+          <>
+            <SwiperSlide>
+              <ModelSmCard type="male" />
+            </SwiperSlide>
+            <SwiperSlide>
+              <ModelSmCard type="female" />
+            </SwiperSlide>
+            <SwiperSlide>
+              <ModelSmCard type="all" />
+            </SwiperSlide>
+          </>
+        )}
       </Swiper>
     </div>
   );

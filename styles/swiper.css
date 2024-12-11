@@ -1,10 +1,8 @@
-.swiper-pagination-bullet {
-  background-color: #000;
-  opacity: 0.8;
+.swiper-pagination-fraction {
+  color: white !important;
+  opacity: 1 !important;
 }
-.swiper-pagination-bullet-active {
-  background-color: #ff6f61;
-}
+
 .card {
   display: flex;
   justify-content: center;
@@ -25,3 +23,23 @@
   font-size: 1rem;
   color: #555;
 }
+
+/* .swiper-button-next,
+.swiper-button-prev {
+  color: black !important;
+  font-size: 2rem !important;
+  width: 50px;
+  height: 50px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  z-index: 100;
+}
+
+.swiper-button-next {
+  left: -30px !important;
+
+}
+
+.swiper-button-prev {
+  left: -30px !important; 
+} */
