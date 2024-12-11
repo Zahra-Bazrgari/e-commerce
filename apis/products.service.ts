@@ -1,26 +1,12 @@
-import { urls } from "@/utils/urls";
+import { urls } from '@/utils/urls';
 import { generateAxiosInstance } from "./axiosInstance";
-import {
-  IAddProducts,
-  IFetchProductsParams,
-  IProductsResponse,
-  IProduct,
-} from "@/types/fetchProducts.types";
-import axios, { AxiosResponse } from "axios";
-import { convertToFormData } from "@/utils/FormData";
+import { IAddProducts, IFetchProductsParams, IProduct, IProductsResponse } from "@/types/fetchProducts.types";
+import { convertToFormData } from '@/utils/FormData';
+import axios, { AxiosResponse } from 'axios';
 
-// GET
-type FetchProductsFuncType = (
-  _: IFetchProductsParams
-) => Promise<IProductsResponse>;
+type FetchProductsFuncType = (_: IFetchProductsParams) => Promise<IProductsResponse>;
 
-export const fetchProducts: FetchProductsFuncType = async ({
-  page = 1,
-  limit = 10,
-  fields,
-  sort,
-  quantity,
-}) => {
+export const fetchProducts: FetchProductsFuncType = async ({ page = 1, limit, fields, sort, quantity }) => {
   const client = generateAxiosInstance();
   const queryParams = new URLSearchParams();
 
