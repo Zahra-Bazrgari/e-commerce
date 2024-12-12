@@ -4,8 +4,6 @@ export const urls = {
     signup: "auth/signup",
     token: "/token",
   },
-  products: {
-    fetch: "/products"
-  },
+  products: "/products",
   orders: "/orders"
 };

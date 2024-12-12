@@ -42,12 +42,12 @@ const DeliveryTable = () => {
         <ul style={{ listStyle: "none" }}>
           {order.products.map((product) => (
             <li key={product._id}>
-              {product.product.name} (x{product.count})
+              {product.product?.name || "نامشخص"} (x{product.count})
             </li>
           ))}
         </ul>
       ),
-    },
+    },   
     { label: "آدرس", render: (order: OrderDetails) => order.user.address || "نامشخص" },
   ];
 

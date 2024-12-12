@@ -3,7 +3,7 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import { LayoutDashboard, Menu, X } from "lucide-react";
+import { LayoutDashboard, Menu, PlusSquare, X } from "lucide-react";
 import { useToggleState } from "@/hooks/useToggleState";
 import { CreditCard } from "lucide-react";
 import { ShoppingBag } from "lucide-react";
@@ -20,6 +20,7 @@ const Sidebar = () => {
       icon: <ShoppingBag width={22} />,
     },
     { name: "سفارشات", path: "admin/orders", icon: <CreditCard width={22} /> },
+    { name: "افزودن محصول", path: "admin/add-product", icon: <PlusSquare width={22} /> },
   ];
 
   return (

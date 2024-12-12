@@ -6,7 +6,7 @@ export const generateAxiosInstance = () => {
   const headers: Record<string, string> = {};
 
   if (token) {
-    headers["Authorization"] = token;
+    headers["Authorization"] = `Bearer ${token}`;
   }
 
   return axios.create({

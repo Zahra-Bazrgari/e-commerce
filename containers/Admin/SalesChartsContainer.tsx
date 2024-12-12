@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useFetchOrders } from "@/hooks/useQuery/useFetchOrders";
 import { DeliveryStatus, SalesPerDay } from "@/utils/OrdersCharts";
 import WeeklyChart from "@/components/charts/WeeklyChart";
