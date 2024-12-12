@@ -1,4 +1,9 @@
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Input } from "@/components/Input";
+import { addProductValidationSchema } from "@/libs/zod/product-schema";
 import { IAddProducts } from "@/types/fetchProducts.types";
 import { postProduct } from "@/apis/products.service";
 
@@ -8,32 +13,21 @@ interface ProductModalProps {
 }
 
 const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose }) => {
-  const [productData, setProductData] = useState<IAddProducts>({
-    category: "",
-    subcategory: "",
-    name: "",
-    price: 0,
-    quantity: 1,
-    brand: "",
-    description: "",
-    // thumbnail: "",
-    // images: [],
-    // rating: { rate: 0, count: 0 },
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<IAddProducts>({
+    resolver: zodResolver(addProductValidationSchema),
+    mode: "onChange",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setProductData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const result = await postProduct(productData);
+  const onSubmit = async (data: IAddProducts) => {
+    const result = await postProduct(data);
     if (result.success) {
       alert("Product added successfully!");
+      reset();
       onClose();
     } else {
       alert(result.message || "Failed to add product");
@@ -44,99 +38,86 @@ const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className='fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center'>
-      <div className='bg-white p-6 rounded-md'>
-        <h2 className='text-2xl font-bold mb-4'>Add Product</h2>
-        <form onSubmit={handleSubmit}>
+      <div className='bg-white p-6 rounded-md w-full max-w-lg'>
+        <h2 className='text-2xl font-bold mb-4'>افزودن محصول</h2>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className='grid grid-cols-1 md:grid-cols-2 md:gap-3'>
+            <div className='mb-4'>
+              <label>نام محصول</label>
+              <Input
+                {...register("name")}
+                error={errors.name?.message as string}
+              />
+            </div>
+            <div className='mb-4'>
+              <label>برند</label>
+              <Input
+                {...register("brand")}
+                error={errors.brand?.message as string}
+              />
+            </div>
+          </div>
+
           <div className='mb-4'>
-            <label>Name</label>
-            <input
-              type='text'
-              name='name'
-              value={productData.name}
-              onChange={handleChange}
-              required
-              className='border p-2 w-full'
+            <label>دسته بندی</label>
+            <Input
+              {...register("category")}
+              error={errors.category?.message as string}
             />
           </div>
+
           <div className='mb-4'>
-            <label>Category</label>
-            <input
-              type='text'
-              name='category'
-              value={productData.category}
-              onChange={handleChange}
-              required
-              className='border p-2 w-full'
+            <label>زیر دسته</label>
+            <Input
+              {...register("subcategory")}
+              error={errors.subcategory?.message as string}
             />
           </div>
+
+          <div className='grid grid-cols-1 md:grid-cols-2 md:gap-3'>
+            <div className='mb-4'>
+              <label>قیمت</label>
+              <Input
+                type='number'
+                {...register("price", { valueAsNumber: true })}
+                error={errors.price?.message as string}
+              />
+            </div>
+
+            <div className='mb-4'>
+              <label>تعداد</label>
+              <Input
+                type='number'
+                {...register("quantity", { valueAsNumber: true })}
+                error={errors.quantity?.message as string}
+              />
+            </div>
+          </div>
+
           <div className='mb-4'>
-            <label>sub category</label>
-            <input
-              type='text'
-              name='subcategory'
-              value={productData.subcategory}
-              onChange={handleChange}
-              required
-              className='border p-2 w-full'
+            <label>توضیحات</label>
+            <Input
+              {...register("description")}
+              error={errors.description?.message as string}
             />
           </div>
-          <div className='mb-4'>
-            <label>Price</label>
-            <input
-              type='number'
-              name='price'
-              value={productData.price}
-              onChange={handleChange}
-              required
-              className='border p-2 w-full'
-            />
-          </div>
-          <div className='mb-4'>
-            <label>Quantity</label>
-            <input
-              type='number'
-              name='quantity'
-              value={productData.quantity}
-              onChange={handleChange}
-              required
-              className='border p-2 w-full'
-            />
-          </div>
-          <div className='mb-4'>
-            <label>Brand</label>
-            <input
-              type='text'
-              name='brand'
-              value={productData.brand}
-              onChange={handleChange}
-              required
-              className='border p-2 w-full'
-            />
-          </div>
-          <div className='mb-4'>
-            <label>Description</label>
-            <input
-              type='text'
-              name='description'
-              value={productData.description}
-              onChange={handleChange}
-              required
-              className='border p-2 w-full'
-            />
-          </div>
-          <div className='mb-4 flex justify-between'>
+
+          <div className='mb-4 flex items-center justify-end gap-2'>
             <button
               type='button'
-              onClick={onClose}
-              className='bg-gray-500 text-white py-2 px-4 rounded-md'
+              onClick={() => {
+                reset();
+                onClose();
+              }}
+              className='bg-gray-400 text-white py-2 px-4 rounded-md'
             >
-              Cancel
+              لغو
             </button>
             <button
               type='submit'
-              className='bg-blue-500 text-white py-2 px-4 rounded-md'
+              className='bg-[#c8c5f6] py-2 px-4 rounded-md text-bs-black'
             >
-              Add Product
+              افزودن محصول
             </button>
           </div>
         </form>

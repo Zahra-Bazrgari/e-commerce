@@ -9,6 +9,7 @@ import { IProduct } from "@/types/fetchProducts.types";
 import ProductModal from "@/components/ProductModal";
 import { useToggleState } from "@/hooks/useToggleState";
 import deleteProduct, { updateProduct } from "@/apis/products.service";
+import { PlusSquare } from "lucide-react";
 
 const ProductsTable = () => {
   const [page, setPage] = useState(1);
@@ -253,14 +254,14 @@ const ProductsTable = () => {
         {!isEditMode && (
           <button
             onClick={() => setIsModalOpen()}
-            className='bg-gradient-to-r from-[#171534] to-[#5b598a] text-white py-2 px-4 rounded-md'
+            className='bg-gradient-to-r from-[#b6b1f9] to-[#f1afe9] py-2 px-4 rounded-md text-bs-black flex gap-1 items-center'
           >
-            افزودن محصول جدید
+            <PlusSquare size={16} />
           </button>
         )}
 
         {isEditMode && (
-          <div className="">
+          <div className=''>
             <button
               onClick={handleSaveAll}
               className='bg-blue-500 text-white py-2 px-4 rounded-md ml-4'
@@ -272,8 +273,8 @@ const ProductsTable = () => {
               className='bg-red-500 text-white py-2 px-4 rounded-md ml-4'
             >
               انصراف
-            </button></div>
-          
+            </button>
+          </div>
         )}
       </div>
 
