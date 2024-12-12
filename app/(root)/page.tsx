@@ -18,7 +18,6 @@ const Home = () => {
       </div>
 
       <section className="mt-72">
-        این یک متن برای تست فونت فارسی است
       </section>
     </div>
   );
