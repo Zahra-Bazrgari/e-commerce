@@ -14,6 +14,9 @@ import {
 } from "lucide-react";
 import { useToggleState } from "@/hooks/useToggleState";
 
+import { usePathname } from "next/navigation";
+import { getRole } from "@/utils/role-manager";
+
 const PRODUCTS = [
   { label: "پوشاک زنانه", path: "/products/female" },
   { label: "پوشاک مردانه", path: "/products/male" },
@@ -21,10 +24,15 @@ const PRODUCTS = [
 ];
 
 const Navbar = () => {
+  const pathname = usePathname();
+
   const [menuOpen, setMenuOpen] = useToggleState(false);
   const [showProducts, setShowProducts] = useToggleState(false);
   const [searchActive, setSearchActive] = useToggleState(false);
-  const [activePath, setActivePath] = useState<string>("/");
+
+  const role = getRole();
+
+  const isActive = (path: string) => pathname === path;
 
   return (
     <>
@@ -55,11 +63,10 @@ const Navbar = () => {
                 <Link href='/'>
                   <span
                     className={`${
-                      activePath === "/"
+                      isActive("/")
                         ? "border-b-2 border-blue-400"
                         : "border-none"
                     }`}
-                    onClick={() => setActivePath("/")}
                   >
                     خانه
                   </span>
@@ -88,11 +95,10 @@ const Navbar = () => {
                       <Link key={product.path} href={product.path}>
                         <span
                           className={`block hover:bg-gray-200 rounded-md px-4 py-2 ${
-                            activePath === product.path
+                            isActive(product.path)
                               ? "border-b-2 border-blue-400"
                               : "border-none"
                           }`}
-                          onClick={() => setActivePath(product.path)}
                         >
                           {product.label}
                         </span>
@@ -125,9 +131,10 @@ const Navbar = () => {
           </div>
 
           <div className='hidden md:flex items-center gap-x-3 lg:gap-0'>
-            <Link href='/log-in'>
+          <Link href={role === "ADMIN" ? "/admin" : "/log-in"}>
               <button className='flex items-center gap-x-1 bg-bs-blue px-4 py-1 rounded-md hover:bg-bs-link-hover-color text-white'>
-                <User className='w-4' /> ورود | ثبت نام
+                <User className='w-4' />
+                {role === "ADMIN" ? "پنل ادمین" : "ورود | ثبت نام"}
               </button>
             </Link>
             <span className='bg-neutral-300 mx-3 hidden lg:block w-[1px] h-[24px]'></span>
@@ -174,12 +181,9 @@ const Navbar = () => {
             )}
             <Link href='/' onClick={() => setMenuOpen()}>
               <span
-                className={`block hover:bg-gray-200 rounded-md px-4 py-2 ${
-                  activePath === "/"
-                    ? "border-b-2 border-blue-400"
-                    : "border-none"
+                className={`${
+                  isActive("/") ? "border-b-2 border-blue-400" : "border-none"
                 }`}
-                onClick={() => setActivePath("/")}
               >
                 خانه
               </span>
@@ -193,22 +197,24 @@ const Navbar = () => {
               >
                 <span
                   className={`block hover:bg-gray-200 rounded-md px-4 py-2 ${
-                    activePath === product.path
+                    isActive(product.path)
                       ? "border-b-2 border-blue-400"
                       : "border-none"
                   }`}
-                  onClick={() => setActivePath(product.path)}
                 >
                   {product.label}
                 </span>
               </Link>
             ))}
 
-            <Link href='/log-in' onClick={() => setMenuOpen()}>
+            <Link href={role === "ADMIN" ? "/admin" : "/log-in"}>
               <button className='flex items-center gap-x-1 bg-bs-blue px-4 py-1 rounded-md hover:bg-bs-link-hover-color text-white'>
-                <User className='w-4' /> ورود | ثبت نام
+                <User className='w-4' />
+                {role === "ADMIN" ? "پنل ادمین" : "ورود | ثبت نام"}
               </button>
             </Link>
+            <span className='bg-neutral-300 mx-3 hidden lg:block w-[1px] h-[24px]'></span>
+            <ShoppingCart />
           </div>
         )}
       </div>

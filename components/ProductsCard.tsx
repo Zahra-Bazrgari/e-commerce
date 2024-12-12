@@ -1,0 +1,69 @@
+import React from "react";
+import { IProduct } from "@/types/fetchProducts.types";
+import Image from "next/image";
+import Link from "next/link";
+import { CircleAlert, Heart, ShoppingBag } from "lucide-react";
+
+const ProductsCard = ({
+  _id,
+  name,
+  category,
+  subcategory,
+  price,
+  quantity,
+  brand,
+  images,
+  description,
+}: IProduct) => {
+  const imagePath = images.length > 0
+    ? `http://localhost:8000/images/products/images/${images[0]}`
+    : '/assets/placeholder-img.png';
+
+  return (
+    <Link href={`/products/${_id}`}>
+      <div className='bg-bs-white hover:shadow-2xl rounded-md text-bs-gray-dark p-4 grid grid-cols-1 gap-2 h-[700px]'>
+        <div className='rounded-md'>
+          <Image
+            src={imagePath}
+            alt={name}
+            width={1000}
+            height={1000}
+            className='rounded-md'
+          />
+        </div>
+
+        <div className='flex gap-1 items-center mt-2'>
+          <div className='bg-bs-primary-bg-subtle px-1 text-sm text-bs-gray-dark font-bold rounded-2xl'>
+            {brand}
+          </div>
+        </div>
+        <div className='font-bold'>{name}</div>
+        {quantity < 5 && quantity > 0 && (
+          <div className='flex items-center justify-between'>
+            <p className='text-bs-red text-xs flex gap-1'>
+              <CircleAlert size={15} />
+              تنها {quantity} عدد در انبار باقی مانده
+            </p>
+            <div className='text-left font-medium'>{price} تومان</div>
+          </div>
+        )}
+
+        {!(quantity < 5) && (
+          <div className='text-left font-medium w-full'>{price} تومان</div>
+        )}
+
+        <div className='w-full flex items-center border-2 border-black h-fit rounded-[33px]'>
+          <button className='bg-black text-white py-1 rounded-3xl w-full flex items-center justify-center gap-3'>
+            <ShoppingBag size={18} />
+            {quantity >= 1 ? <span>افزودن به سبد خرید</span> : <span>ناموجود</span>}
+          </button>
+          <div className='flex items-center justify-center text-center w-[30%]'>
+            <Heart />
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+};
+
+export default ProductsCard;

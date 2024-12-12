@@ -48,3 +48,9 @@ export interface IAddProducts {
   images?: string[];
   rating?: Rating;
 }
+export interface IFetchProductByIdResponse {
+  status: string;
+  data: {
+    product: IProduct;
+  };
+}
