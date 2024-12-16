@@ -3,6 +3,8 @@ import { IProduct } from "@/types/fetchProducts.types";
 import Image from "next/image";
 import Link from "next/link";
 import { CircleAlert, Heart, ShoppingBag } from "lucide-react";
+import { useAppDispatch, useAppSelector } from '@/hooks/storeHook';
+import { addToCart } from '@/libs/redux/carSlice';
 
 const ProductsCard = ({
   _id,
@@ -15,9 +17,36 @@ const ProductsCard = ({
   images,
   description,
 }: IProduct) => {
+  const dispatch = useAppDispatch()
+  const {cartItems} = useAppSelector((state) => state.cart)
+
+  const isInCart = cartItems.some((item) => item._id === _id)
+
   const imagePath = images.length > 0
     ? `http://localhost:8000/images/products/images/${images[0]}`
     : '/assets/placeholder-img.png';
+
+    const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+    
+      if (!isInCart && quantity > 0) {
+        dispatch(
+          addToCart({
+            _id,
+            name,
+            price,
+            brand,
+            images,
+            description,
+            maxQuantity: quantity,
+            quantity: 1,
+            category,
+            subcategory,
+          })
+        );
+      }
+    };
+    
 
   return (
     <Link href={`/products/${_id}`}>
@@ -53,9 +82,23 @@ const ProductsCard = ({
         )}
 
         <div className='w-full flex items-center border-2 border-black h-fit rounded-[33px]'>
-          <button className='bg-black text-white py-1 rounded-3xl w-full flex items-center justify-center gap-3'>
+        <button
+            className={`py-1 rounded-3xl w-full flex items-center justify-center gap-3 ${
+              isInCart || quantity <= 0
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-black text-white"
+            }`}
+            onClick={handleAddToCart}
+            disabled={isInCart || quantity <= 0}
+          >
             <ShoppingBag size={18} />
-            {quantity >= 1 ? <span>افزودن به سبد خرید</span> : <span>ناموجود</span>}
+            {quantity <= 0 ? (
+              <span>ناموجود</span>
+            ) : isInCart ? (
+              <span>در سبد خرید</span>
+            ) : (
+              <span>افزودن به سبد خرید</span>
+            )}
           </button>
           <div className='flex items-center justify-center text-center w-[30%]'>
             <Heart />

@@ -16,6 +16,7 @@ import { useToggleState } from "@/hooks/useToggleState";
 
 import { usePathname } from "next/navigation";
 import { getRole } from "@/utils/role-manager";
+import { useAppSelector } from "@/hooks/storeHook";
 
 const PRODUCTS = [
   { label: "پوشاک زنانه", path: "/products/female" },
@@ -29,8 +30,11 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useToggleState(false);
   const [showProducts, setShowProducts] = useToggleState(false);
   const [searchActive, setSearchActive] = useToggleState(false);
+  const [cartOpen, setCartOpen] = useToggleState(false);
 
   const role = getRole();
+
+  const { cartItems, totalItems } = useAppSelector((state) => state.cart);
 
   const isActive = (path: string) => pathname === path;
 
@@ -57,90 +61,139 @@ const Navbar = () => {
             </button>
           </div>
 
-          <div className='hidden md:flex items-center gap-x-6'>
-            {!searchActive ? (
-              <>
-                <Link href='/'>
-                  <span
-                    className={`${
-                      isActive("/")
-                        ? "border-b-2 border-blue-400"
-                        : "border-none"
-                    }`}
-                  >
-                    خانه
-                  </span>
-                </Link>
 
-                <div
-                  className='relative group'
-                  onMouseEnter={() => setShowProducts()}
-                  onMouseLeave={() => setShowProducts()}
-                >
-                  <div className='cursor-pointer flex gap-1 items-center'>
-                    محصولات
-                    {showProducts ? (
-                      <ChevronUp size={20} />
-                    ) : (
-                      <ChevronDown size={20} />
-                    )}
-                  </div>
+          {/* desktop */}
+            <div className='hidden md:flex items-center gap-x-6'>
+              {!searchActive ? (
+                <>
+                  <Link href='/'>
+                    <span
+                      className={`${
+                        isActive("/")
+                          ? "border-b-2 border-blue-400"
+                          : "border-none"
+                      }`}
+                    >
+                      خانه
+                    </span>
+                  </Link>
 
                   <div
-                    className={`dropdown-menu absolute top-full mt-2 w-[300px] bg-white rounded-lg shadow-lg p-4 z-50 ${
-                      showProducts ? "show" : ""
-                    }`}
+                    className='relative group'
+                    onMouseEnter={() => setShowProducts()}
+                    onMouseLeave={() => setShowProducts()}
                   >
-                    {PRODUCTS.map((product) => (
-                      <Link key={product.path} href={product.path}>
-                        <span
-                          className={`block hover:bg-gray-200 rounded-md px-4 py-2 ${
-                            isActive(product.path)
-                              ? "border-b-2 border-blue-400"
-                              : "border-none"
-                          }`}
-                        >
-                          {product.label}
-                        </span>
-                      </Link>
-                    ))}
+                    <div className='cursor-pointer flex gap-1 items-center'>
+                      محصولات
+                      {showProducts ? (
+                        <ChevronUp size={20} />
+                      ) : (
+                        <ChevronDown size={20} />
+                      )}
+                    </div>
+
+                    <div
+                      className={`dropdown-menu absolute top-full mt-2 w-[300px] bg-white rounded-lg shadow-lg p-4 z-50 ${
+                        showProducts ? "show" : ""
+                      }`}
+                    >
+                      {PRODUCTS.map((product) => (
+                        <Link key={product.path} href={product.path}>
+                          <span
+                            className={`block hover:bg-gray-200 rounded-md px-4 py-2 ${
+                              isActive(product.path)
+                                ? "border-b-2 border-blue-400"
+                                : "border-none"
+                            }`}
+                          >
+                            {product.label}
+                          </span>
+                        </Link>
+                      ))}
+                    </div>
                   </div>
+
+                  <button
+                    className='text-slate-800'
+                    onClick={() => setSearchActive()}
+                  >
+                    جستجو
+                  </button>
+                </>
+              ) : (
+                <div className='flex items-center gap-3'>
+                  <button>
+                    <Search className='text-slate-800' size={20} />
+                  </button>
+                  <input
+                    type='text'
+                    placeholder='جستجو کنید...'
+                    className='outline-none border-none focus:ring-0 bg-transparent text-lg text-slate-800 placeholder:text-base'
+                    autoFocus
+                    onBlur={() => setSearchActive()}
+                  />
+                </div>
+              )}
+            </div>
+
+            <div className='hidden md:flex items-center gap-x-3 lg:gap-0'>
+              <Link href={role === "ADMIN" ? "/admin" : "/log-in"}>
+                <button className='flex items-center gap-x-1 bg-bs-blue px-4 py-1 rounded-md hover:bg-bs-link-hover-color text-white'>
+                  <User className='w-4' />
+                  {role === "ADMIN" ? "پنل ادمین" : "ورود | ثبت نام"}
+                </button>
+              </Link>
+
+              <span className='bg-neutral-300 mx-3 hidden lg:block w-[1px] h-[24px]'></span>
+
+              <div className='relative'>
+                <div
+                  className='relative cursor-pointer'
+                  onClick={() => setCartOpen()}
+                >
+                  <ShoppingCart className='text-black' size={24} />
+                  {totalItems > 0 && (
+                    <span className='absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-[2px] rounded-full'>
+                      {totalItems}
+                    </span>
+                  )}
                 </div>
 
-                <button
-                  className='text-slate-800'
-                  onClick={() => setSearchActive()}
-                >
-                  جستجو
-                </button>
-              </>
-            ) : (
-              <div className='flex items-center gap-3'>
-                <button>
-                  <Search className='text-slate-800' size={20} />
-                </button>
-                <input
-                  type='text'
-                  placeholder='جستجو کنید...'
-                  className='outline-none border-none focus:ring-0 bg-transparent text-lg text-slate-800 placeholder:text-base'
-                  autoFocus
-                  onBlur={() => setSearchActive()}
-                />
+                {cartOpen && (
+                  <div className='absolute -left-20 top-14 w-64 bg-white shadow-lg rounded-lg p-4 z-50'>
+                    {cartItems.length === 0 ? (
+                      <p className='text-sm text-gray-500'>
+                        سبد خرید شما خالی است.
+                      </p>
+                    ) : (
+                      <>
+                        {cartItems.map((item) => (
+                          <Link
+                            href='/cart'
+                            key={item._id}
+                            onClick={() => setCartOpen()}
+                          >
+                            <div className='flex items-center justify-between py-2 border-b cursor-pointer hover:bg-gray-100'>
+                              <div className='text-sm font-bold'>
+                                {item.name}
+                              </div>
+                              <div className='text-sm'>{item.quantity}x</div>
+                            </div>
+                          </Link>
+                        ))}
+                        <Link href='/cart' onClick={() => setCartOpen()}>
+                          <button className='mt-4 w-full bg-blue-600 text-white px-4 py-2 rounded-md'>
+                            مشاهده سبد خرید
+                          </button>
+                        </Link>
+                      </>
+                    )}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            </div>
 
-          <div className='hidden md:flex items-center gap-x-3 lg:gap-0'>
-          <Link href={role === "ADMIN" ? "/admin" : "/log-in"}>
-              <button className='flex items-center gap-x-1 bg-bs-blue px-4 py-1 rounded-md hover:bg-bs-link-hover-color text-white'>
-                <User className='w-4' />
-                {role === "ADMIN" ? "پنل ادمین" : "ورود | ثبت نام"}
-              </button>
-            </Link>
-            <span className='bg-neutral-300 mx-3 hidden lg:block w-[1px] h-[24px]'></span>
-            <ShoppingCart />
-          </div>
-
+          {/* mobile */}
           <div className='md:hidden'>
             <button
               onClick={() => setMenuOpen()}
@@ -214,7 +267,17 @@ const Navbar = () => {
               </button>
             </Link>
             <span className='bg-neutral-300 mx-3 hidden lg:block w-[1px] h-[24px]'></span>
-            <ShoppingCart />
+
+            <Link href='/cart'>
+              <div className='relative cursor-pointer'>
+                <ShoppingCart className='text-black' size={24} />
+                {totalItems > 0 && (
+                  <span className='absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-[2px] rounded-full'>
+                    {totalItems}
+                  </span>
+                )}
+              </div>
+            </Link>
           </div>
         )}
       </div>
