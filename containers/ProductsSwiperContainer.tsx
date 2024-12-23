@@ -13,7 +13,7 @@ import ModelSmCard from "@/components/slider/ModelSmCard";
 
 const SwiperContainer = ({ type }: { type: "sm" | "lg" }) => {
   return (
-    <div className={`w-full ${type === "lg" ? "p-16 md:p-36" : "p-8"}`}>
+    <div className={`${type === "lg" ? "p-16 md:p-36" : "p-8"} overflow-y-hidden`}>
       <Swiper
         modules={[Pagination, Autoplay]}
         pagination={{ type: "fraction" }}

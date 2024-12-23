@@ -10,6 +10,9 @@ export interface IProduct {
   thumbnail?: string;
   images: string[];
   slugname?: string;
+  createdAt?: string; 
+  updatedAt?: string; 
+  rating?: Rating; 
 }
 
 export interface IProductsResponse {
