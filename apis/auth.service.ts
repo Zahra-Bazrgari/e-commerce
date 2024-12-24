@@ -6,7 +6,6 @@ import {
   IAuthResponse,
   ISignUpRequest,
 } from "@/types/auth.types";
-import { setSession } from "@/utils/session-manager";
 
 type loginFuncType = (data: ILoginRequest) => Promise<IAuthResponse>;
 
