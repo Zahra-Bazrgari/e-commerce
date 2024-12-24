@@ -34,7 +34,7 @@ const Filter = ({ setQuantityFilter }: Props) => {
 
             <input
               type='range'
-              min={1}
+              min={0}
               max={10}
               value={quantity}
               onChange={(e) => setQuantity(Number(e.target.value))}

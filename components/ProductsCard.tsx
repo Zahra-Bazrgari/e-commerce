@@ -2,7 +2,9 @@ import React from "react";
 import { IProduct } from "@/types/fetchProducts.types";
 import Image from "next/image";
 import Link from "next/link";
-import { CircleAlert } from "lucide-react";
+import { CircleAlert, Heart, ShoppingBag } from "lucide-react";
+import { useAppDispatch, useAppSelector } from '@/hooks/storeHook';
+import { addToCart } from '@/libs/redux/carSlice';
 
 const ProductsCard = ({
   _id,
@@ -15,12 +17,43 @@ const ProductsCard = ({
   images,
   description,
 }: IProduct) => {
+  const dispatch = useAppDispatch()
+  const {cartItems} = useAppSelector((state) => state.cart)
+
+  const isInCart = cartItems.some((item) => item._id === _id)
+
+  const imagePath = images.length > 0
+    ? `http://localhost:8000/images/products/images/${images[0]}`
+    : '/assets/placeholder-img.png';
+
+    const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+    
+      if (!isInCart && quantity > 0) {
+        dispatch(
+          addToCart({
+            _id,
+            name,
+            price,
+            brand,
+            images,
+            description,
+            maxQuantity: quantity,
+            quantity: 1,
+            category,
+            subcategory,
+          })
+        );
+      }
+    };
+    
+
   return (
     <Link href={`/products/${_id}`}>
-      <div className='bg-bs-white hover:shadow-2xl rounded-md text-bs-gray-dark p-4 grid grid-cols-1 gap-2'>
+      <div className='bg-bs-white hover:shadow-2xl rounded-md text-bs-gray-dark p-4 grid grid-cols-1 gap-2 h-[700px]'>
         <div className='rounded-md'>
           <Image
-            src={`http://localhost:8000/images/products/images/${images[0]}`}
+            src={imagePath}
             alt={name}
             width={1000}
             height={1000}
@@ -28,15 +61,13 @@ const ProductsCard = ({
           />
         </div>
 
-        <span className='w-full h-[1px] bg-slate-200'></span>
-
         <div className='flex gap-1 items-center mt-2'>
           <div className='bg-bs-primary-bg-subtle px-1 text-sm text-bs-gray-dark font-bold rounded-2xl'>
             {brand}
           </div>
         </div>
         <div className='font-bold'>{name}</div>
-        {quantity < 5 && (
+        {quantity < 5 && quantity > 0 && (
           <div className='flex items-center justify-between'>
             <p className='text-bs-red text-xs flex gap-1'>
               <CircleAlert size={15} />
@@ -50,9 +81,29 @@ const ProductsCard = ({
           <div className='text-left font-medium w-full'>{price} تومان</div>
         )}
 
-        <button className='bg-bs-blue mt-3 text-white py-1 rounded-lg'>
-          افزودن به سبد خرید
-        </button>
+        <div className='w-full flex items-center border-2 border-black h-fit rounded-[33px]'>
+        <button
+            className={`py-1 rounded-3xl w-full flex items-center justify-center gap-3 ${
+              isInCart || quantity <= 0
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-black text-white"
+            }`}
+            onClick={handleAddToCart}
+            disabled={isInCart || quantity <= 0}
+          >
+            <ShoppingBag size={18} />
+            {quantity <= 0 ? (
+              <span>ناموجود</span>
+            ) : isInCart ? (
+              <span>در سبد خرید</span>
+            ) : (
+              <span>افزودن به سبد خرید</span>
+            )}
+          </button>
+          <div className='flex items-center justify-center text-center w-[30%]'>
+            <Heart />
+          </div>
+        </div>
       </div>
     </Link>
   );

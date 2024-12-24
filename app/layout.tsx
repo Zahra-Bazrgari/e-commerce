@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 // import localFont from "next/font/local";
 import "./globals.css";
 import QueryClientWrapper from "@/providers/QueryClient";
+import GlobalStateProvider from '@/providers/ReduxProvider';
 
 // const geistSans = localFont({
 //   src: "./fonts/GeistVF.woff",
@@ -27,7 +28,9 @@ export default function RootLayout({
   return (
     <html lang='fa' dir='rtl'>
       <body className={`antialiased`}>
-        <QueryClientWrapper>{children}</QueryClientWrapper>
+        <GlobalStateProvider>
+          <QueryClientWrapper>{children}</QueryClientWrapper>
+        </GlobalStateProvider>
       </body>
     </html>
   );

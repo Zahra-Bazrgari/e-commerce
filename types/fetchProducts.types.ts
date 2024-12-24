@@ -10,9 +10,12 @@ export interface IProduct {
   thumbnail?: string;
   images: string[];
   slugname?: string;
+  createdAt?: string; 
+  updatedAt?: string; 
+  rating?: Rating; 
 }
 
-export interface IFetchProductsResponse {
+export interface IProductsResponse {
   status: string;
   page: number;
   per_page: number;
@@ -29,4 +32,28 @@ export interface IFetchProductsParams {
   fields?: string;
   sort?: string;
   quantity?: { [key: string]: number };
+}
+
+export interface Rating {
+  rate: number;
+  count: number;
+}
+
+export interface IAddProducts {
+  category: string;
+  subcategory: string;
+  name: string;
+  price: number;
+  quantity: number;
+  brand: string;
+  description: string;
+  thumbnail?: string;
+  images?: string[];
+  rating?: Rating;
+}
+export interface IFetchProductByIdResponse {
+  status: string;
+  data: {
+    product: IProduct;
+  };
 }
