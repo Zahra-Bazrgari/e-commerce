@@ -10,7 +10,7 @@ const LastFiveProducts = () => {
   if (error) return <div>Error loading products!</div>;
 
   return (
-    <div className="px-10">
+    <div className="px-10 w-[60%] mx-auto md:w-full">
       <div className="flex gap-2 items-center">
         <h2 className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 font-extrabold md:text-xl lg:text-3xl">
           جدیدترین‌ها!

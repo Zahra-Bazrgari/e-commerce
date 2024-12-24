@@ -4,7 +4,6 @@ import HeroSection from "@/components/HeroSection";
 import LastFiveProducts from '@/containers/Home/LastFiveProducts';
 import GuaranteeSection from '@/containers/Home/GuaranteeSection';
 import GetStarted from '@/containers/Home/GetStarted';
-import Footer from '@/components/Footer';
 
 const Home = () => {
   return (
@@ -32,7 +31,6 @@ const Home = () => {
       <section>
         <GetStarted />
       </section>
-      <Footer />
     </div>
   );
 };
