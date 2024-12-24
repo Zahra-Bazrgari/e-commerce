@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-import { urls } from '@/utils/urls';
-import { generateAxiosInstance } from "./axiosInstance";
-import { IFetchProductsParams, IFetchProductsResponse } from "@/types/fetchProducts.types";
-
-type FetchProductsFuncType = (_: IFetchProductsParams) => Promise<IFetchProductsResponse>;
-
-export const fetchProducts: FetchProductsFuncType = async ({ page = 1, limit = 10, fields, sort, quantity }) => {
-  const axiosInstance = generateAxiosInstance();
-=======
 import { urls } from "@/utils/urls";
 import { generateAxiosInstance } from "./axiosInstance";
 import {
@@ -32,7 +22,6 @@ export const fetchProducts: FetchProductsFuncType = async ({
   quantity,
 }) => {
   const client = generateAxiosInstance();
->>>>>>> homePage
   const queryParams = new URLSearchParams();
 
   if (page) queryParams.append("page", page.toString());
@@ -42,15 +31,6 @@ export const fetchProducts: FetchProductsFuncType = async ({
 
   if (quantity) {
     Object.entries(quantity).forEach(([key, value]) => {
-<<<<<<< HEAD
-      queryParams.append(`quantity[${key}]`, value.toString());
-    });
-  }
-
-  const response = await axiosInstance.get<IFetchProductsResponse>(`${urls.products.fetch}?${queryParams.toString()}`);
-  return response.data;
-};
-=======
       if (key !== "eq") {
         queryParams.append(`quantity[${key}]`, value.toString());
       } else {
@@ -170,4 +150,3 @@ export const updateProduct: UpdateProductFuncType = async (
     };
   }
 };
->>>>>>> homePage
