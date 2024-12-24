@@ -15,6 +15,7 @@ import {
 import { useToggleState } from "@/hooks/useToggleState";
 import { getRole } from "@/utils/role-manager";
 import { useAppSelector } from "@/hooks/storeHook";
+import { signOut } from "@/apis/auth.service";
 
 const PRODUCTS = [
   { label: "پوشاک زنانه", path: "/products/female" },
@@ -39,38 +40,45 @@ const Navbar = () => {
 
   const isActive = (path: string) => pathname === path;
 
-  if (pathname === null || role === null) {
+  if (pathname === null) {
     return null;
   }
+
+  const handleSignOut = () => {
+    if (role !== "ADMIN") {
+      signOut();
+      setRole(null);
+    }
+  };
 
   return (
     <>
       {showProducts && (
         <div
-          className="fixed inset-0 bg-black/30 backdrop-blur-md z-40"
+          className='fixed inset-0 bg-black/30 backdrop-blur-md z-40'
           onClick={() => setShowProducts()}
         ></div>
       )}
 
-      <div className="glassmorphism-navbar fixed top-4 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-xl z-50 w-[98%] max-w-[1200px]">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center justify-center gap-x-2">
+      <div className='glassmorphism-navbar fixed top-4 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-xl z-50 w-[98%] max-w-[1200px]'>
+        <div className='flex items-center justify-between'>
+          <div className='flex items-center justify-center gap-x-2'>
             <Image
-              src="/logo/light-mode-logo.png"
+              src='/logo/light-mode-logo.png'
               width={100}
               height={50}
-              alt="Logo"
+              alt='Logo'
             />
-            <button className="rounded-full p-1 text-slate-600">
+            <button className='rounded-full p-1 text-slate-600'>
               <Sun />
             </button>
           </div>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center gap-x-6">
+          <div className='hidden md:flex items-center gap-x-6'>
             {!searchActive ? (
               <>
-                <Link href="/">
+                <Link href='/'>
                   <span
                     className={`${
                       isActive("/")
@@ -83,11 +91,11 @@ const Navbar = () => {
                 </Link>
 
                 <div
-                  className="relative group"
+                  className='relative group'
                   onMouseEnter={() => setShowProducts()}
                   onMouseLeave={() => setShowProducts()}
                 >
-                  <div className="cursor-pointer flex gap-1 items-center">
+                  <div className='cursor-pointer flex gap-1 items-center'>
                     محصولات
                     {showProducts ? (
                       <ChevronUp size={20} />
@@ -118,21 +126,21 @@ const Navbar = () => {
                 </div>
 
                 <button
-                  className="text-slate-800"
+                  className='text-slate-800'
                   onClick={() => setSearchActive()}
                 >
                   جستجو
                 </button>
               </>
             ) : (
-              <div className="flex items-center gap-3">
+              <div className='flex items-center gap-3'>
                 <button>
-                  <Search className="text-slate-800" size={20} />
+                  <Search className='text-slate-800' size={20} />
                 </button>
                 <input
-                  type="text"
-                  placeholder="جستجو کنید..."
-                  className="outline-none border-none focus:ring-0 bg-transparent text-lg text-slate-800 placeholder:text-base"
+                  type='text'
+                  placeholder='جستجو کنید...'
+                  className='outline-none border-none focus:ring-0 bg-transparent text-lg text-slate-800 placeholder:text-base'
                   autoFocus
                   onBlur={() => setSearchActive()}
                 />
@@ -141,51 +149,72 @@ const Navbar = () => {
           </div>
 
           {/* Desktop Actions */}
-          <div className="hidden md:flex items-center gap-x-3 lg:gap-0">
-            <Link href={role === "ADMIN" ? "/admin" : "/log-in"}>
-              <button className="flex items-center gap-x-1 bg-bs-blue px-4 py-1 rounded-md hover:bg-bs-link-hover-color text-white">
-                <User className="w-4" />
-                {role === "ADMIN" ? "پنل ادمین" : "خروج از حساب کاربری"}
+          <div className='hidden md:flex items-center gap-x-3 lg:gap-0'>
+            {role === "ADMIN" && (
+              <Link href='/admin'>
+                <button className='flex items-center gap-x-1 bg-bs-blue px-4 py-1 rounded-md hover:bg-bs-link-hover-color text-white'>
+                  <User className='w-4' />
+                  پنل ادمین
+                </button>
+              </Link>
+            )}
+
+            {role && role !== "ADMIN" && (
+              <button
+                onClick={handleSignOut}
+                className='flex items-center gap-x-1 bg-bs-blue px-4 py-1 rounded-md hover:bg-bs-link-hover-color text-white'
+              >
+                <User className='w-4' />
+                خروج از حساب کاربری
               </button>
-            </Link>
+            )}
 
-            <span className="bg-neutral-300 mx-3 hidden lg:block w-[1px] h-[24px]"></span>
+            {!role && (
+              <Link href='/log-in'>
+                <button className='flex items-center gap-x-1 bg-bs-blue px-4 py-1 rounded-md hover:bg-bs-link-hover-color text-white'>
+                  <User className='w-4' />
+                  ورود / ثبت نام
+                </button>
+              </Link>
+            )}
 
-            <div className="relative">
+            <span className='bg-neutral-300 mx-3 hidden lg:block w-[1px] h-[24px]'></span>
+
+            <div className='relative'>
               <div
-                className="relative cursor-pointer"
+                className='relative cursor-pointer'
                 onClick={() => setCartOpen()}
               >
-                <ShoppingCart className="text-black" size={24} />
+                <ShoppingCart className='text-black' size={24} />
                 {totalItems > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-[2px] rounded-full">
+                  <span className='absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-[2px] rounded-full'>
                     {totalItems}
                   </span>
                 )}
               </div>
 
               {cartOpen && (
-                <div className="absolute -left-20 top-14 w-64 bg-white shadow-lg rounded-lg p-4 z-50">
+                <div className='absolute -left-20 top-14 w-64 bg-white shadow-lg rounded-lg p-4 z-50'>
                   {cartItems.length === 0 ? (
-                    <p className="text-sm text-gray-500">
+                    <p className='text-sm text-gray-500'>
                       سبد خرید شما خالی است.
                     </p>
                   ) : (
                     <>
                       {cartItems.map((item) => (
                         <Link
-                          href="/cart"
+                          href='/cart'
                           key={item._id}
                           onClick={() => setCartOpen()}
                         >
-                          <div className="flex items-center justify-between py-2 border-b cursor-pointer hover:bg-gray-100">
-                            <div className="text-sm font-bold">{item.name}</div>
-                            <div className="text-sm">{item.quantity}x</div>
+                          <div className='flex items-center justify-between py-2 border-b cursor-pointer hover:bg-gray-100'>
+                            <div className='text-sm font-bold'>{item.name}</div>
+                            <div className='text-sm'>{item.quantity}x</div>
                           </div>
                         </Link>
                       ))}
-                      <Link href="/cart" onClick={() => setCartOpen()}>
-                        <button className="mt-4 w-full bg-blue-600 text-white px-4 py-2 rounded-md">
+                      <Link href='/cart' onClick={() => setCartOpen()}>
+                        <button className='mt-4 w-full bg-blue-600 text-white px-4 py-2 rounded-md'>
                           مشاهده سبد خرید
                         </button>
                       </Link>
@@ -197,24 +226,24 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Menu */}
-          <div className="md:hidden">
+          <div className='md:hidden'>
             <button
               onClick={() => setMenuOpen()}
-              className="text-slate-800"
-              aria-label="Toggle Menu"
+              className='text-slate-800'
+              aria-label='Toggle Menu'
             >
               {menuOpen ? (
-                <X className="w-6 h-6" />
+                <X className='w-6 h-6' />
               ) : (
-                <Menu className="w-6 h-6" />
+                <Menu className='w-6 h-6' />
               )}
             </button>
           </div>
         </div>
 
         {menuOpen && (
-          <div className="absolute top-16 left-0 w-full h-fit bg-white bg-opacity-80 backdrop-blur-md shadow-lg rounded-md p-4 flex flex-col gap-y-8 z-50 items-center md:hidden">
-            <Link href="/" onClick={() => setMenuOpen()}>
+          <div className='absolute top-16 left-0 w-full h-fit bg-white bg-opacity-80 backdrop-blur-md shadow-lg rounded-md p-4 flex flex-col gap-y-8 z-50 items-center md:hidden'>
+            <Link href='/' onClick={() => setMenuOpen()}>
               <span
                 className={`${
                   isActive("/") ? "border-b-2 border-blue-400" : "border-none"
@@ -242,12 +271,33 @@ const Navbar = () => {
               </Link>
             ))}
 
-            <Link href={role === "ADMIN" ? "/admin" : "/log-in"}>
-              <button className="flex items-center gap-x-1 bg-bs-blue px-4 py-1 rounded-md hover:bg-bs-link-hover-color text-white">
-                <User className="w-4" />
-                {role === "ADMIN" ? "پنل ادمین" : "خروج از حساب کاربری"}
+            {role === "ADMIN" && (
+              <Link href='/admin'>
+                <button className='flex items-center gap-x-1 bg-bs-blue px-4 py-1 rounded-md hover:bg-bs-link-hover-color text-white'>
+                  <User className='w-4' />
+                  پنل ادمین
+                </button>
+              </Link>
+            )}
+
+            {role && role !== "ADMIN" && (
+              <button
+                onClick={handleSignOut}
+                className='flex items-center gap-x-1 bg-bs-blue px-4 py-1 rounded-md hover:bg-bs-link-hover-color text-white'
+              >
+                <User className='w-4' />
+                خروج از حساب کاربری
               </button>
-            </Link>
+            )}
+
+            {!role && (
+              <Link href='/log-in'>
+                <button className='flex items-center gap-x-1 bg-bs-blue px-4 py-1 rounded-md hover:bg-bs-link-hover-color text-white'>
+                  <User className='w-4' />
+                  ورود / ثبت نام
+                </button>
+              </Link>
+            )}
 
             <Link href='/cart'>
               <div className='relative cursor-pointer'>
