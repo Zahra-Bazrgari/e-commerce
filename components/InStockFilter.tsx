@@ -17,8 +17,8 @@ const FilterButton: React.FC<FilterButtonProps> = ({ showInStock, setQuantityFil
   return (
     <button
       onClick={handleClick}
-      className={`px-6 py-2 rounded-md text-white ${
-        showInStock ? "bg-slate-300" : "bg-bs-primary"
+      className={`px-6 py-1 rounded-md ${
+        showInStock ? "bg-slate-300 text-black" : "bg-bs-primary text-white"
       } hover:opacity-90`}
     >
       {showInStock ? <span>نمایش همه محصولات</span>: <span>نمایش محصولات موجود</span>} 

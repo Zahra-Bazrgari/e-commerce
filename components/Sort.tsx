@@ -1,62 +1,66 @@
 "use client";
 import React, { useState } from "react";
 import { ListFilter, X } from "lucide-react";
+import { useToggleState } from "@/hooks/useToggleState";
 
 type Props = {
   setSort: (value: string) => void;
 };
 
 const Sort = ({ setSort }: Props) => {
-  const [isSortModalOpen, setIsSortModalOpen] = useState<boolean>(false);
+  const [isSortMenuOpen, setIsSortMenuOpen] = useToggleState();
+  const [selectedSort, setSelectedSort] = useState<string>("");
 
   return (
-    <div className="ّtext-bs-black">
+    <div className='text-bs-black flex flex-col gap-2 mb-3 items-center md:flex-row md:gap-0 md:mb-0'>
       <h2
-        className={`flex gap-1 cursor-pointer text-lg ${
-          isSortModalOpen ? "text-bs-blue" : "text-black"
-        }`}
-        onClick={() => setIsSortModalOpen((prev) => !prev)}
+        className='flex gap-1 items-center cursor-pointer text-lg text-black hover:text-bs-blue transition-colors'
+        onClick={() => setIsSortMenuOpen()}
       >
         <ListFilter />
         مرتب سازی
+        {isSortMenuOpen && <span>:</span>}
       </h2>
+      {isSortMenuOpen && (
+        <div
+          className={`flex items-center gap-4 transform transition-transform duration-600 ${
+            isSortMenuOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+        >
+          <div className='flex items-center gap-4 mx-2'>
+            <button
+              className={`transition-colors ${
+                selectedSort === "-price" ? "text-bs-blue" : "text-black"
+              } hover:text-bs-blue`}
+              onClick={() => {
+                setSelectedSort("-price");
+                setSort("-price");
+              }}
+            >
+              گران‌ترین
+            </button>
 
-      {isSortModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50">
-          <div className="bg-white rounded-lg p-6 w-80 md:w-96">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold">مرتب سازی محصولات</h3>
-              <button onClick={() => setIsSortModalOpen(false)}>
-                <X className="hover:text-bs-secondary" />
-              </button>
-            </div>
-
-            <div className="flex flex-col gap-4">
-              <button
-                className="bg-slate-200 rounded-md hover:bg-slate-400"
-                onClick={() => {
-                  setSort("price");
-                  setIsSortModalOpen(false);
-                }}
-              >
-                قیمت: از کم به زیاد
-              </button>
-              <button
-                className="bg-slate-200 rounded-md hover:bg-slate-400"
-                onClick={() => {
-                  setSort("-price");
-                  setIsSortModalOpen(false);
-                }}
-              >
-                قیمت: از زیاد به کم
-              </button>
-              <button
-                className="bg-slate-200 rounded-md hover:bg-slate-400"
-                onClick={() => setIsSortModalOpen(false)}
-              >
-                لغو مرتب سازی
-              </button>
-            </div>
+            <button
+              className={`transition-colors ${
+                selectedSort === "price" ? "text-bs-blue" : "text-black"
+              } hover:text-bs-blue`}
+              onClick={() => {
+                setSelectedSort("price");
+                setSort("price");
+              }}
+            >
+              ارزان‌ترین
+            </button>
+            <button
+              className={"transition-colors text-black hover:text-bs-blue"}
+              onClick={() => {
+                setSelectedSort("");
+                setIsSortMenuOpen();
+                setSort("");
+              }}
+            >
+              لغو
+            </button>
           </div>
         </div>
       )}

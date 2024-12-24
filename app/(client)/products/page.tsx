@@ -1,6 +1,6 @@
-import ProductsPage from '@/containers/products/AllProducts'
+import ProductsContainer from '@/containers/Products/Products'
 import React from 'react'
 
-const page = () => <ProductsPage />
+const page = () => <ProductsContainer />
 
 export default page

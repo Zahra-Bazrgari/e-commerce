@@ -3,8 +3,8 @@ import { IProduct } from "@/types/fetchProducts.types";
 import Image from "next/image";
 import Link from "next/link";
 import { CircleAlert, Heart, ShoppingBag } from "lucide-react";
-import { useAppDispatch, useAppSelector } from '@/hooks/storeHook';
-import { addToCart } from '@/libs/redux/carSlice';
+import { useAppDispatch, useAppSelector } from "@/hooks/storeHook";
+import { addToCart } from "@/libs/redux/carSlice";
 
 const ProductsCard = ({
   _id,
@@ -16,48 +16,44 @@ const ProductsCard = ({
   brand,
   images,
   description,
+  rating,
 }: IProduct) => {
-  const dispatch = useAppDispatch()
-  const {cartItems} = useAppSelector((state) => state.cart)
+  const dispatch = useAppDispatch();
+  const { cartItems } = useAppSelector((state) => state.cart);
 
-  const isInCart = cartItems.some((item) => item._id === _id)
+  const isInCart = cartItems.some((item) => item._id === _id);
 
-  const imagePath = images.length > 0
-    ? `http://localhost:8000/images/products/images/${images[0]}`
-    : '/assets/placeholder-img.png';
+  const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
 
-    const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.preventDefault();
-    
-      if (!isInCart && quantity > 0) {
-        dispatch(
-          addToCart({
-            _id,
-            name,
-            price,
-            brand,
-            images,
-            description,
-            maxQuantity: quantity,
-            quantity: 1,
-            category,
-            subcategory,
-          })
-        );
-      }
-    };
-    
+    if (!isInCart && quantity > 0) {
+      dispatch(
+        addToCart({
+          _id,
+          name,
+          price,
+          brand,
+          images,
+          description,
+          maxQuantity: quantity,
+          quantity: 1,
+          category,
+          subcategory,
+        })
+      );
+    }
+  };
 
   return (
     <Link href={`/products/${_id}`}>
-      <div className='bg-bs-white hover:shadow-2xl rounded-md text-bs-gray-dark p-4 grid grid-cols-1 gap-2 h-[700px]'>
+      <div className='bg-bs-white hover:shadow-2xl rounded-md text-bs-gray-dark p-4 grid grid-cols-1 gap-2 md:h-[450px]'>
         <div className='rounded-md'>
           <Image
-            src={imagePath}
+            src={`http://localhost:8000/images/products/images/${images[0]}`}
             alt={name}
-            width={1000}
-            height={1000}
-            className='rounded-md'
+            width={300}
+            height={300}
+            className='rounded-md w-full'
           />
         </div>
 
@@ -66,7 +62,18 @@ const ProductsCard = ({
             {brand}
           </div>
         </div>
-        <div className='font-bold'>{name}</div>
+        <div className='flex items-center justify-between'>
+          <div className='font-bold'>{name}</div>
+          {rating && (
+            <div className='flex items-center text-yellow-500 text-sm'>
+              <span className='ml-1'>{rating.rate}</span>
+              <span>⭐</span>
+            </div>
+          )}
+        </div>
+
+        <p className='text-xs text-gray-600 truncate'>{description}</p>
+
         {quantity < 5 && quantity > 0 && (
           <div className='flex items-center justify-between'>
             <p className='text-bs-red text-xs flex gap-1'>
@@ -82,11 +89,11 @@ const ProductsCard = ({
         )}
 
         <div className='w-full flex items-center border-2 border-black h-fit rounded-[33px]'>
-        <button
-            className={`py-1 rounded-3xl w-full flex items-center justify-center gap-3 ${
+          <button
+            className={`py-1 rounded-3xl w-full flex items-center justify-center gap-3 text-white ${
               isInCart || quantity <= 0
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-black text-white"
+                ? "bg-gray-600 cursor-not-allowed"
+                : "bg-black"
             }`}
             onClick={handleAddToCart}
             disabled={isInCart || quantity <= 0}
