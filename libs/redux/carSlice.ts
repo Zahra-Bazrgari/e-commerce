@@ -10,14 +10,33 @@ interface CartState {
   cartItems: CartItem[];
   totalItems: number;
   totalQuantity: number;
+  totalPrice: number;
 }
+
+const recalculateCart = (cartItems: CartItem[]) => {
+  const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  const totalPrice = cartItems.reduce(
+    (acc, item) => acc + item.quantity * item.price,
+    0
+  );
+  return { totalQuantity, totalPrice };
+};
 
 const loadFromLocalStorage = (): CartState => {
   if (typeof window !== "undefined") {
     const data = localStorage.getItem("cart");
-    return data ? JSON.parse(data) : { cartItems: [], totalItems: 0, totalQuantity: 0 };
+    const cartItems: CartItem[] = data ? JSON.parse(data).cartItems : [];
+    const { totalQuantity, totalPrice } = recalculateCart(cartItems);
+
+    return {
+      cartItems,
+      totalItems: cartItems.length,
+      totalQuantity,
+      totalPrice,
+    };
   }
-  return { cartItems: [], totalItems: 0, totalQuantity: 0 };
+
+  return { cartItems: [], totalItems: 0, totalQuantity: 0, totalPrice: 0 };
 };
 
 const initialState: CartState = loadFromLocalStorage();
@@ -35,11 +54,13 @@ const cartSlice = createSlice({
         if (existingItem.quantity < action.payload.maxQuantity) {
           existingItem.quantity += action.payload.quantity;
           state.totalQuantity += action.payload.quantity;
+          state.totalPrice += action.payload.quantity * action.payload.price;
         }
       } else {
         state.cartItems.push({ ...action.payload });
         state.totalItems += 1;
         state.totalQuantity += action.payload.quantity;
+        state.totalPrice += action.payload.quantity * action.payload.price;
       }
     },
 
@@ -49,7 +70,9 @@ const cartSlice = createSlice({
       );
 
       if (itemIndex !== -1) {
-        state.totalQuantity -= state.cartItems[itemIndex].quantity;
+        const item = state.cartItems[itemIndex];
+        state.totalQuantity -= item.quantity;
+        state.totalPrice -= item.quantity * item.price;
         state.cartItems.splice(itemIndex, 1);
         state.totalItems -= 1;
       }
@@ -63,6 +86,7 @@ const cartSlice = createSlice({
       if (existingItem && existingItem.quantity < existingItem.maxQuantity) {
         existingItem.quantity += 1;
         state.totalQuantity += 1;
+        state.totalPrice += existingItem.price;
       }
     },
 
@@ -74,6 +98,7 @@ const cartSlice = createSlice({
       if (existingItem && existingItem.quantity > 1) {
         existingItem.quantity -= 1;
         state.totalQuantity -= 1;
+        state.totalPrice -= existingItem.price;
       }
     },
 
@@ -81,6 +106,7 @@ const cartSlice = createSlice({
       state.cartItems = [];
       state.totalItems = 0;
       state.totalQuantity = 0;
+      state.totalPrice = 0;
     },
   },
 });

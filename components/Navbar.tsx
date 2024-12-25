@@ -11,11 +11,13 @@ import {
   ChevronDown,
   ChevronUp,
   Search,
+  LogOut,
 } from "lucide-react";
 import { useToggleState } from "@/hooks/useToggleState";
 import { getRole } from "@/utils/role-manager";
 import { useAppSelector } from "@/hooks/storeHook";
 import { signOut } from "@/apis/auth.service";
+import CartDropdown from "./cart/NavBarDropDown";
 
 const PRODUCTS = [
   { label: "پوشاک زنانه", path: "/products/female" },
@@ -164,7 +166,7 @@ const Navbar = () => {
                 onClick={handleSignOut}
                 className='flex items-center gap-x-1 bg-bs-blue px-4 py-1 rounded-md hover:bg-bs-link-hover-color text-white'
               >
-                <User className='w-4' />
+                <LogOut size={16} />
                 خروج از حساب کاربری
               </button>
             )}
@@ -193,35 +195,11 @@ const Navbar = () => {
                 )}
               </div>
 
-              {cartOpen && (
-                <div className='absolute -left-20 top-14 w-64 bg-white shadow-lg rounded-lg p-4 z-50'>
-                  {cartItems.length === 0 ? (
-                    <p className='text-sm text-gray-500'>
-                      سبد خرید شما خالی است.
-                    </p>
-                  ) : (
-                    <>
-                      {cartItems.map((item) => (
-                        <Link
-                          href='/cart'
-                          key={item._id}
-                          onClick={() => setCartOpen()}
-                        >
-                          <div className='flex items-center justify-between py-2 border-b cursor-pointer hover:bg-gray-100'>
-                            <div className='text-sm font-bold'>{item.name}</div>
-                            <div className='text-sm'>{item.quantity}x</div>
-                          </div>
-                        </Link>
-                      ))}
-                      <Link href='/cart' onClick={() => setCartOpen()}>
-                        <button className='mt-4 w-full bg-blue-600 text-white px-4 py-2 rounded-md'>
-                          مشاهده سبد خرید
-                        </button>
-                      </Link>
-                    </>
-                  )}
-                </div>
-              )}
+              <CartDropdown
+                cartItems={cartItems}
+                cartOpen={cartOpen}
+                toggleCart={() => setCartOpen()}
+              />
             </div>
           </div>
 
@@ -285,7 +263,7 @@ const Navbar = () => {
                 onClick={handleSignOut}
                 className='flex items-center gap-x-1 bg-bs-blue px-4 py-1 rounded-md hover:bg-bs-link-hover-color text-white'
               >
-                <User className='w-4' />
+                <LogOut size={16} />
                 خروج از حساب کاربری
               </button>
             )}
