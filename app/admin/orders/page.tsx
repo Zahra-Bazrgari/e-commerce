@@ -1,16 +1,7 @@
-"use client"
-import OrdersPage from "@/containers/Admin/OrdersTableContainer";
-import { getRole } from "@/utils/role-manager";
-import { redirect } from 'next/navigation';
-
 import React from "react";
+import OrdersPage from "@/containers/Admin/OrdersTableContainer";
 
 const page = () => {
-  const role = getRole();
-
-  if (role !== "ADMIN") {
-    redirect("/404");
-  }
   return (
     <div className='container mx-auto p-4'>
       <OrdersPage />
