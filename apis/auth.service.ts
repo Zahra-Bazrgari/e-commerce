@@ -1,4 +1,3 @@
-import axios from "axios";
 import { urls } from "@/utils/urls";
 import { generateAxiosInstance } from "./axiosInstance";
 import {
@@ -6,6 +5,8 @@ import {
   IAuthResponse,
   ISignUpRequest,
 } from "@/types/auth.types";
+import { clearSession, setSession } from '@/utils/session-manager';
+import { clearRole } from '@/utils/role-manager';
 
 type loginFuncType = (data: ILoginRequest) => Promise<IAuthResponse>;
 
@@ -24,26 +25,28 @@ export const signUpFunction: signUpFuncType = async (body) => {
 };
 
 
-export const refreshAccessToken = async (): Promise<string | null> => {
-  const refreshToken = window.localStorage.getItem(
-    process.env.NEXT_PUBLIC_REFRESH_TOKEN_NAME as string
-  );
 
-  if (!refreshToken) return null;
-
+export const refreshAccessToken = async (refreshToken: string) => {
+  const client = generateAxiosInstance()
   try {
-    const response = await axios.post(urls.auth.token, { refreshToken });
-
-    const newAccessToken = response.data.token.accessToken;
-
-    window.localStorage.setItem(
-      process.env.NEXT_PUBLIC_SESSIONS_NAME as string,
-      newAccessToken
+    const response = await client.post(
+      urls.auth.token,
+      {
+        "refreshToken": refreshToken
+    }
     );
-
+    console.log(response.data)
+    const newAccessToken = response.data.token.accessToken;
+    setSession(newAccessToken);
     return newAccessToken;
   } catch (error) {
-    console.log("Failed to refresh access token:", error);
-    return null;
+    console.error('Failed to refresh access token:', error);
+    throw error;
   }
+};
+
+export const signOut = () => {
+  clearSession();
+  clearRole(); 
+  console.log('User has been signed out successfully.');
 };

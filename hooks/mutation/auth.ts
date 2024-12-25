@@ -1,10 +1,37 @@
-import { logInFunction, signUpFunction } from '@/apis/auth.service'
-import { useMutation } from 'react-query'
+import { logInFunction, signUpFunction, refreshAccessToken } from '@/apis/auth.service';
+import { useMutation } from 'react-query';
+import { setSession } from '@/utils/session-manager';
+import { setRole } from '@/utils/role-manager';
+
+const startTokenRefreshTimer = (refreshToken: string) => {
+  setTimeout(async () => {
+    try {
+      const newAccessToken = await refreshAccessToken(refreshToken);
+      setSession(newAccessToken); 
+    } catch (error) {
+      console.error('Failed to refresh access token:', error);
+    }
+  }, 14 * 60 * 1000);
+};
 
 export const useLogin = () => {
-  return useMutation({mutationFn: logInFunction, mutationKey: ["login"]})
-}
+  return useMutation(logInFunction, {
+    onSuccess: (data) => {
+      const { accessToken, refreshToken } = data.token;
+      setSession(accessToken);
+      setRole(data.data.user.role);
+      startTokenRefreshTimer(refreshToken);
+    },
+  });
+};
 
-export const useSingup = () => {
-  return useMutation({mutationFn: signUpFunction, mutationKey: ["signup"]})
-}
+export const useSignup = () => {
+  return useMutation(signUpFunction, {
+    onSuccess: (data) => {
+      const { accessToken, refreshToken } = data.token;
+      setSession(accessToken);
+      setRole(data.data.user.role);
+      startTokenRefreshTimer(refreshToken); 
+    },
+  });
+};

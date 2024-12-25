@@ -10,6 +10,9 @@ export interface IProduct {
   thumbnail?: string;
   images: string[];
   slugname?: string;
+  createdAt?: string; 
+  updatedAt?: string; 
+  rating?: Rating; 
 }
 
 export interface IProductsResponse {
@@ -47,4 +50,10 @@ export interface IAddProducts {
   thumbnail?: string;
   images?: string[];
   rating?: Rating;
+}
+export interface IFetchProductByIdResponse {
+  status: string;
+  data: {
+    product: IProduct;
+  };
 }

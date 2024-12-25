@@ -2,7 +2,7 @@ import { OrderDetailsResponse, OrdersResponse } from '@/types/orders.type';
 import { generateAxiosInstance } from './axiosInstance';
 import { urls } from '@/utils/urls';
 
-export const fetchOrders = async (page: number = 1, limit: number = 10): Promise<OrdersResponse> => {
+export const fetchOrders = async (page= 1, limit= 10): Promise<OrdersResponse> => {
   const client = generateAxiosInstance();
   const response = await client.get<OrdersResponse>(urls.orders, {
     params: { page, limit },

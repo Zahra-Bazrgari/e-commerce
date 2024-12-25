@@ -27,6 +27,10 @@ body {
   background: linear-gradient(138.18deg, #c7e6ff 0%, #fce5e5 94.44%);
 }
 
+.gs-bg {
+  background: linear-gradient(120deg, #d4c1f0, #fee0df);
+}
+
 .glassmorphism-navbar {
   background: linear-gradient(
       rgba(255, 255, 255, 0.25),
@@ -36,6 +40,7 @@ body {
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.183); 
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.18);
+  transform: translateX(-50%)
 }
 
 .text-gradient {
@@ -65,4 +70,79 @@ body {
   animation: shine 2s ease-in-out infinite alternate;
 }
 
+.dropdown-menu {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease-in-out;
+  width: 300px; 
+  left: -110px;
+}
+
+.dropdown-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.last-five-title {
+  background: linear-gradient(to right, #0090f7, #ba62fc, #f2416b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@layer utilities {
+  :root {
+    --swiper-bottom: -320px;
+  }
+
+  @media (min-width: 300px) and (max-width: 450px) {
+    :root {
+      --swiper-bottom: -300px;
+    }
+  }
+
+  @media (min-width: 450px) and (max-width: 520px) {
+    :root {
+      --swiper-bottom: -400px;
+    }
+  }
+
+  @media (min-width: 520) and (max-width: 768px) {
+    :root {
+      --swiper-bottom: -520px;
+    }
+  }
+}
+
+@layer utilities {
+  :root {
+    --margin-top: 10rem;
+  }
+
+  @media (min-width: 300px) and (max-width: 450px) {
+    :root {
+      --margin-top: 20rem;
+    }
+  }
+
+  @media (min-width: 450px) and (max-width: 520px) {
+    :root {
+      --margin-top: 25rem;
+    }
+  }
+
+  @media (min-width: 520px) and (max-width: 768px) {
+    :root {
+      --margin-top: 35rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    :root {
+      --margin-top: 20rem;
+    }
+  }
+}
 

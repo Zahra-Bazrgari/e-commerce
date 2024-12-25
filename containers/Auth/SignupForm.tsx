@@ -9,10 +9,11 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Input } from "@/components/Input";
-import { useSingup } from "@/hooks/mutation/auth";
+
 import { setSession } from "@/utils/session-manager";
 import { setRole } from "@/utils/role-manager"; 
 import { signUpFormSchema, signUpSchemaType } from "@/libs/zod/auth-schema";
+import { useSignup } from '@/hooks/mutation/auth';
 
 const SignupForm: React.FC = () => {
   const signUpForm = useForm<signUpSchemaType>({
@@ -24,7 +25,7 @@ const SignupForm: React.FC = () => {
     },
   });
 
-  const signUp = useSingup();
+  const signUp = useSignup();
   const router = useRouter();
 
   const onSubmit = (data: signUpSchemaType) => {

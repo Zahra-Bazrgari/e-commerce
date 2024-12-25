@@ -2,7 +2,7 @@ import { useQuery } from "react-query";
 import { fetchProducts } from "@/apis/products.service";
 import { IFetchProductsParams, IProductsResponse } from "@/types/fetchProducts.types";
 
-export const useFetchProducts = (params: IProductsResponse) => {
+export const useFetchProducts = (params: IFetchProductsParams) => {
   return useQuery<IProductsResponse>({
     queryKey: ["products", params],
     queryFn: () => fetchProducts(params),

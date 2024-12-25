@@ -1,18 +1,22 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
-import { LayoutDashboard, Menu, PlusSquare, X } from "lucide-react";
+import { Home, LayoutDashboard, Menu, PlusSquare, X, LogOut } from "lucide-react";
+import { CreditCard, ShoppingBag } from "lucide-react";
 import { useToggleState } from "@/hooks/useToggleState";
-import { CreditCard } from "lucide-react";
-import { ShoppingBag } from "lucide-react";
+import { getRole } from "@/utils/role-manager";
+import { signOut } from "@/apis/auth.service";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useToggleState(false);
   const pathname = usePathname();
+  const router = useRouter();
+  const role = getRole(); 
 
   const navItems = [
+    { name: "خانه", path: "", icon: <Home width={22} /> },
     { name: "داشبورد", path: "admin", icon: <LayoutDashboard width={22} /> },
     {
       name: "محصولات",
@@ -20,14 +24,24 @@ const Sidebar = () => {
       icon: <ShoppingBag width={22} />,
     },
     { name: "سفارشات", path: "admin/orders", icon: <CreditCard width={22} /> },
-    { name: "افزودن محصول", path: "admin/add-product", icon: <PlusSquare width={22} /> },
+    {
+      name: "افزودن محصول",
+      path: "admin/add-product",
+      icon: <PlusSquare width={22} />,
+    },
   ];
 
+  const handleSignOut = () => {
+    signOut();
+    router.push("/"); 
+  };
+
   return (
-    <div className='relative'>
+    <div className="relative">
+      {/* Mobile menu toggle button */}
       <button
         onClick={() => setIsOpen()}
-        className='p-4 md:hidden absolute z-50'
+        className="p-4 md:hidden absolute z-50"
       >
         {isOpen ? <X /> : <Menu />}
       </button>
@@ -37,16 +51,18 @@ const Sidebar = () => {
           isOpen ? "translate-x-0" : "translate-x-full"
         } md:translate-x-0 md:h-screen`}
       >
-        <div className='w-full flex items-center justify-center'>
+        {/* Logo */}
+        <div className="w-full flex items-center justify-center">
           <Image
             src={"/logo/light-mode-logo.png"}
-            alt='Logo'
+            alt="Logo"
             width={100}
             height={100}
           />
         </div>
 
-        <div className='mt-8 space-y-3'>
+        {/* Navigation links */}
+        <div className="mt-8 space-y-3">
           {navItems.map((item) => (
             <div key={item.name}>
               <Link
@@ -58,7 +74,7 @@ const Sidebar = () => {
                 }`}
                 onClick={() => setIsOpen()}
               >
-                <div className='flex gap-2'>
+                <div className="flex gap-2">
                   {item.icon}
                   {item.name}
                 </div>
@@ -66,6 +82,18 @@ const Sidebar = () => {
             </div>
           ))}
         </div>
+
+        {role === "ADMIN" && (
+          <div className="absolute bottom-4 w-full">
+            <button
+              onClick={handleSignOut}
+              className="w-full flex gap-2 text-center items-center justify-center px-4 py-2 font-medium text-bs-black hover:text-red-500"
+            >
+              <LogOut width={22} />
+              خروج
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

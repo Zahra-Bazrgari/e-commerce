@@ -1,18 +1,21 @@
+import { parseCookies, setCookie, destroyCookie } from "nookies";
+
+const COOKIE_NAME = process.env.NEXT_PUBLIC_SESSIONS_NAME as string;
+
 export const getSession = () => {
-  return window.localStorage.getItem(
-    process.env.NEXT_PUBLIC_SESSIONS_NAME as string
-  );
+  const cookies = parseCookies();
+  return cookies[COOKIE_NAME];
 };
 
 export const setSession = (token: string) => {
-  return window.localStorage.setItem(
-    process.env.NEXT_PUBLIC_SESSIONS_NAME as string,
-    token
-  );
+  setCookie(null, COOKIE_NAME, token, {
+    maxAge: 14 * 60, //14 mins
+    path: "/",
+    secure: process.env.NODE_ENV === "production",
+    httpOnly: false,
+  });
 };
 
 export const clearSession = () => {
-  window.localStorage.removeItem(
-    process.env.NEXT_PUBLIC_SESSIONS_NAME as string
-  );
+  destroyCookie(null, COOKIE_NAME, { path: "/" });
 };
