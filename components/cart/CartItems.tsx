@@ -4,7 +4,7 @@ import { removeFromCart } from "@/libs/redux/carSlice";
 import { AppDispatch } from "@/libs/redux/store";
 import { X } from "lucide-react";
 import { useDispatch } from "react-redux";
-import QuantityControl from '../QuantityControl';
+import QuantityControl from '../controllers/QuantityControl';
 
 
 interface CartItemProps {

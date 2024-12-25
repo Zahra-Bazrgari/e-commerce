@@ -104,7 +104,7 @@ const ProductsCard = ({
             ) : isInCart ? (
               <span>در سبد خرید</span>
             ) : (
-              <span>افزودن به سبد خرید</span>
+              <span>سبد خرید</span>
             )}
           </button>
           <div className='flex items-center justify-center text-center w-[30%]'>

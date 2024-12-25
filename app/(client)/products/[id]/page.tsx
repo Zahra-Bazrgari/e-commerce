@@ -1,6 +1,6 @@
 "use client";
 
-import ProductDetails from "@/components/SingleProduct";
+import ProductDetails from "@/components/products/SingleProduct";
 import { useFetchProductById } from "@/hooks/useQuery/useSingleProduct";
 import React, { useEffect, useState } from "react";
 

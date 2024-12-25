@@ -1,5 +1,5 @@
 "use client";
-import LastFiveCard from "@/components/LastFiveCard";
+import LastFiveCard from "@/components/products/LastFiveCard";
 import { useLastFiveProducts } from "@/hooks/useLastFive";
 import React from "react";
 

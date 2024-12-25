@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import ProductsCard from "@/components/ProductsCard";
+import ProductsCard from "@/components/products/ProductsCard";
 import { useFetchProducts } from "@/hooks/useQuery/useFetchProducts";
 import Pagination from "@/components/Pagination";
-import Sort from "@/components/Sort";
-import FilterButton from "@/components/InStockFilter";
+import Sort from "@/components/controllers/Sort";
+import FilterButton from "@/components/controllers/InStockFilter";
 
 interface ProductsContainerProps {
   categoryId?: string;
