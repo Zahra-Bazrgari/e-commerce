@@ -6,13 +6,13 @@ export function middleware(request: NextRequest) {
 
   const role = request.cookies.get(roleName)?.value;
 
-  const adminRoutes = ["/admin", "/admin/orders", "/admin/products"];
+  // const adminRoutes = ["/admin", "/admin/orders", "/admin/products"];
 
-  if (adminRoutes.some((route) => request.nextUrl.pathname.startsWith(route))) {
+  // if (adminRoutes.some((route) => request.nextUrl.pathname.startsWith(route))) {
     if (role !== "ADMIN") {
       return NextResponse.redirect(new URL("/404", request.url));
     }
-  }
+  // }
 
   return NextResponse.next();
 }
