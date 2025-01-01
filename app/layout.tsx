@@ -28,9 +28,7 @@ export default function RootLayout({
   return (
     <html lang='fa' dir='rtl'>
       <body className={`antialiased`}>
-        <GlobalStateProvider>
           <QueryClientWrapper>{children}</QueryClientWrapper>
-        </GlobalStateProvider>
       </body>
     </html>
   );

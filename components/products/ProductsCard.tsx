@@ -3,8 +3,7 @@ import { IProduct } from "@/types/fetchProducts.types";
 import Image from "next/image";
 import Link from "next/link";
 import { CircleAlert, Heart, ShoppingBag } from "lucide-react";
-import { useAppDispatch, useAppSelector } from "@/hooks/storeHook";
-import { addToCart } from "@/libs/redux/carSlice";
+import { useCart, useAddToCart } from "@/hooks/useCart";
 
 const ProductsCard = ({
   _id,
@@ -18,29 +17,27 @@ const ProductsCard = ({
   description,
   rating,
 }: IProduct) => {
-  const dispatch = useAppDispatch();
-  const { cartItems } = useAppSelector((state) => state.cart);
+  const { data: cartData } = useCart(); 
+  const addToCartMutation = useAddToCart();
 
-  const isInCart = cartItems.some((item) => item._id === _id);
+  const isInCart = cartData?.items.some((item) => item._id === _id);
 
   const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     if (!isInCart && quantity > 0) {
-      dispatch(
-        addToCart({
-          _id,
-          name,
-          price,
-          brand,
-          images,
-          description,
-          maxQuantity: quantity,
-          quantity: 1,
-          category,
-          subcategory,
-        })
-      );
+      addToCartMutation.mutate({
+        _id,
+        name,
+        price,
+        brand,
+        images,
+        description,
+        maxQuantity: quantity,
+        quantity: 1,
+        category,
+        subcategory,
+      });
     }
   };
 
@@ -96,7 +93,7 @@ const ProductsCard = ({
                 : "bg-black"
             }`}
             onClick={handleAddToCart}
-            disabled={isInCart || quantity <= 0}
+            disabled={isInCart || quantity <= 0 || addToCartMutation.isLoading}
           >
             <ShoppingBag size={18} />
             {quantity <= 0 ? (

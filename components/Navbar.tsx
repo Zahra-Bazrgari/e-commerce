@@ -15,9 +15,9 @@ import {
 } from "lucide-react";
 import { useToggleState } from "@/hooks/useToggleState";
 import { getRole } from "@/utils/role-manager";
-import { useAppSelector } from "@/hooks/storeHook";
 import { signOut } from "@/apis/auth.service";
 import CartDropdown from "./cart/NavBarDropDown";
+import { useCart } from '@/hooks/useCart';
 
 const PRODUCTS = [
   { label: "پوشاک زنانه", path: "/products/female" },
@@ -33,12 +33,12 @@ const Navbar = () => {
   const [role, setRole] = useState<string | null>(null);
   const [pathname, setPathname] = useState<string | null>(null);
 
+  const { data: cartData } = useCart();
+
   useEffect(() => {
     setRole(getRole());
     setPathname(window.location.pathname);
   }, []);
-
-  const { cartItems, totalItems } = useAppSelector((state) => state.cart);
 
   const isActive = (path: string) => pathname === path;
 
@@ -52,6 +52,8 @@ const Navbar = () => {
       setRole(null);
     }
   };
+
+  const totalItems = cartData?.totalItems;
 
   return (
     <>
@@ -188,15 +190,15 @@ const Navbar = () => {
                 onClick={() => setCartOpen()}
               >
                 <ShoppingCart className='text-black' size={24} />
-                {totalItems > 0 && (
+                {totalItems && totalItems >= 1 ? (
                   <span className='absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-[2px] rounded-full'>
                     {totalItems}
                   </span>
-                )}
+                ) : <></>}
               </div>
 
               <CartDropdown
-                cartItems={cartItems}
+                cartItems={cartData?.items || []}
                 cartOpen={cartOpen}
                 toggleCart={() => setCartOpen()}
               />
@@ -280,11 +282,11 @@ const Navbar = () => {
             <Link href='/cart'>
               <div className='relative cursor-pointer'>
                 <ShoppingCart className='text-black' size={24} />
-                {totalItems > 0 && (
+                {totalItems && totalItems >= 1 ? (
                   <span className='absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-[2px] rounded-full'>
                     {totalItems}
                   </span>
-                )}
+                ) : <></>}
               </div>
             </Link>
           </div>

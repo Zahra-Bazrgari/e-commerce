@@ -10,7 +10,7 @@ const CartSideBar = () => {
   const pathname = usePathname(); 
 
   return (
-    <aside className="w-fit bg-[#33314c] py-10 px-2 hidden lg:flex flex-col items-start justify-between">
+    <aside className="w-fit bg-[#33314c] py-10 px-2 hidden lg:flex flex-col items-start justify-between min-h-screen">
       {/* Logo */}
       <Image
         src={"/logo/dark-mode-logo.png"}

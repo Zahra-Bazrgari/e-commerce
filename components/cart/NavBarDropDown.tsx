@@ -1,12 +1,9 @@
 "use client";
 import React from "react";
-import { useDispatch } from "react-redux";
-import { removeFromCart } from "@/libs/redux/carSlice";
-import { AppDispatch } from "@/libs/redux/store";
 import { X } from "lucide-react";
 import Link from "next/link";
-import QuantityControl from '../controllers/QuantityControl';
-
+import QuantityControl from "../controllers/QuantityControl";
+import { useRemoveFromCart, useUpdateQuantity } from "@/hooks/useCart";
 
 interface CartItem {
   _id: string;
@@ -24,13 +21,40 @@ interface CartDropdownProps {
   toggleCart: () => void;
 }
 
-const CartDropdown: React.FC<CartDropdownProps> = ({ cartItems, cartOpen, toggleCart }) => {
-  const dispatch = useDispatch<AppDispatch>();
+const CartDropdown: React.FC<CartDropdownProps> = ({
+  cartItems,
+  cartOpen,
+  toggleCart,
+}) => {
+  const removeFromCartMutation = useRemoveFromCart();
+  const updateQuantityMutation = useUpdateQuantity();
+
+  const handleRemove = (_id: string) => {
+    removeFromCartMutation.mutate({ _id: _id });
+  };
+
+  const handleIncrement = (item: CartItem) => {
+    if (item.quantity < item.maxQuantity) {
+      updateQuantityMutation.mutate({
+        _id: item._id,
+        quantity: item.quantity + 1,
+      });
+    }
+  };
+
+  const handleDecrement = (item: CartItem) => {
+    if (item.quantity > 1) {
+      updateQuantityMutation.mutate({
+        _id: item._id,
+        quantity: item.quantity - 1,
+      });
+    }
+  };
 
   return (
     <div className="relative">
       {cartOpen && (
-        <div className="absolute left-0 top-8 w-96 bg-white shadow-lg rounded-lg p-4 z-50">
+        <div className="absolute max-h-96 overflow-y-scroll left-0 top-8 w-96 bg-white shadow-lg rounded-lg p-4 z-50">
           {cartItems.length === 0 ? (
             <p className="text-sm text-gray-500 w-full text-center">
               سبد خرید شما خالی است.
@@ -46,7 +70,11 @@ const CartDropdown: React.FC<CartDropdownProps> = ({ cartItems, cartOpen, toggle
                     <div className="flex w-full items-center justify-between">
                       <div className="flex">
                         <img
-                          src={`http://localhost:8000/images/products/thumbnails/${item.thumbnail}` || "/placeholder.jpg"}
+                          src={
+                            item.thumbnail
+                              ? `http://localhost:8000/images/products/thumbnails/${item.thumbnail}`
+                              : "/placeholder.jpg"
+                          }
                           alt={item.name}
                           className="w-16 h-16 object-cover rounded-md"
                         />
@@ -56,7 +84,7 @@ const CartDropdown: React.FC<CartDropdownProps> = ({ cartItems, cartOpen, toggle
                         </div>
                       </div>
                       <button
-                        onClick={() => dispatch(removeFromCart({ _id: item._id }))}
+                        onClick={() => handleRemove(item._id)}
                         className="ml-6 hover:text-gray-400"
                       >
                         <X size={20} />
@@ -69,6 +97,8 @@ const CartDropdown: React.FC<CartDropdownProps> = ({ cartItems, cartOpen, toggle
                         itemId={item._id}
                         quantity={item.quantity}
                         maxQuantity={item.maxQuantity}
+                        onIncrement={() => handleIncrement(item)}
+                        onDecrement={() => handleDecrement(item)}
                       />
 
                       <p className="text-sm font-semibold">

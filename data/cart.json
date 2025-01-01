@@ -1,3 +1,21 @@
 {
-  "items": []
+  "items": [
+    {
+      "_id": "674f47bc500a93328b020a0b",
+      "name": "کفش Clogs",
+      "price": 1500000,
+      "quantity": 1,
+      "maxQuantity": 3
+    },
+    {
+      "_id": "674f4bd1500a93328b020a4f",
+      "name": "شلوار جین آبی روشن",
+      "price": 900000,
+      "quantity": 1,
+      "maxQuantity": 3
+    }
+  ],
+  "totalItems": 2,
+  "totalQuantity": 2,
+  "totalPrice": 2400000
 }

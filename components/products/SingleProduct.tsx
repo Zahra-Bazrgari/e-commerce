@@ -1,29 +1,20 @@
-"use client";
 import React, { useState, useEffect } from "react";
 import { IProduct } from "@/types/fetchProducts.types";
 import Image from "next/image";
 import { CircleAlert, ShoppingBag } from "lucide-react";
-
-import { useAppDispatch, useAppSelector } from "@/hooks/storeHook";
-import {
-  addToCart,
-  incrementQuantity,
-  decrementQuantity,
-} from "@/libs/redux/carSlice";
+import { useCart, useAddToCart, useUpdateQuantity } from "@/hooks/useCart";
 
 interface ProductDetailsProps {
   product: IProduct;
 }
 
 const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
-  const dispatch = useAppDispatch();
-  const { cartItems } = useAppSelector((state) => state.cart);
+  const { data: cartData, isLoading: cartLoading } = useCart();
+  const addToCartMutation = useAddToCart();
+  const updateQuantityMutation = useUpdateQuantity();
 
-  const cartItem = cartItems.find((item) => item._id === product._id);
-
-  const [itemCount, setItemCount] = useState<number>(
-    cartItem ? cartItem.quantity : 1
-  );
+  const cartItem = cartData?.items.find((item) => item._id === product._id);
+  const [itemCount, setItemCount] = useState<number>(1);
 
   useEffect(() => {
     if (cartItem) {
@@ -34,7 +25,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   const increment = () => {
     if (cartItem) {
       if (cartItem.quantity < product.quantity) {
-        dispatch(incrementQuantity({ _id: product._id }));
+        updateQuantityMutation.mutate({ _id: cartItem._id, quantity: cartItem.quantity + 1 });
       }
     } else {
       setItemCount((prev) => (prev < product.quantity ? prev + 1 : prev));
@@ -43,7 +34,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
 
   const decrement = () => {
     if (cartItem && cartItem.quantity > 1) {
-      dispatch(decrementQuantity({ _id: product._id }));
+      updateQuantityMutation.mutate({ _id: cartItem._id, quantity: cartItem.quantity - 1 });
     } else {
       setItemCount((prev) => (prev > 1 ? prev - 1 : 1));
     }
@@ -51,15 +42,14 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
 
   const handleAddToCart = () => {
     if (!cartItem && product.quantity >= 1) {
-      dispatch(
-        addToCart({
-          ...product,
-          quantity: itemCount,
-          maxQuantity: product.quantity,
-        })
-      );
+      addToCartMutation.mutate({
+        ...product,
+        quantity: itemCount,
+        maxQuantity: product.quantity,
+      });
     }
   };
+  
 
   const imagePath =
     product.images.length > 0
@@ -88,6 +78,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
         <div className="flex items-center gap-4 my-4">
           <button
             onClick={decrement}
+            disabled={cartLoading || (!cartItem && itemCount <= 1)}
             className="bg-gray-200 px-4 py-2 rounded-md text-black font-bold hover:bg-gray-400"
           >
             -
@@ -95,6 +86,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
           <span className="text-xl font-bold">{itemCount}</span>
           <button
             onClick={increment}
+            disabled={cartLoading || (cartItem && cartItem.quantity >= product.quantity)}
             className="bg-gray-200 px-4 py-2 rounded-md text-black font-bold hover:bg-gray-400"
           >
             +
@@ -108,7 +100,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
               : "bg-black text-white"
           }`}
           onClick={handleAddToCart}
-          disabled={!!cartItem || product.quantity <= 0}
+          disabled={!!cartItem || product.quantity <= 0 || addToCartMutation.isLoading}
         >
           <ShoppingBag size={18} />
           {product.quantity <= 0 ? (
