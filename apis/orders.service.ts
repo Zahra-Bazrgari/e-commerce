@@ -15,3 +15,22 @@ export const fetchOrderById = async (orderId: string): Promise<OrderDetailsRespo
   const response = await client.get<OrderDetailsResponse>(`${urls.orders}/${orderId}`);
   return response.data;
 };
+
+export interface Product {
+    product: string;
+    count: number;
+    _id: string;
+}
+
+export interface Order {
+    user: string;
+    products: Product[];
+    totalPrice: number;
+    deliveryDate: string;
+    deliveryStatus: boolean;
+}
+export const createOrder = async (order: Order): Promise<any> => {
+  const client = generateAxiosInstance();
+  const response = await client.post(`${urls.orders}`, order);
+  return response.data;
+};

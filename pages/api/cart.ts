@@ -8,6 +8,7 @@ interface CartItem {
   price: number;
   quantity: number;
   maxQuantity: number;
+  thumbnail: string;
 }
 
 interface CartData {
@@ -57,14 +58,15 @@ export default function handler(req: NextApiRequest, res: NextApiResponse): void
 
     case 'POST': {
       try {
-        const { _id, name, price, quantity, maxQuantity } = req.body;
+        const { _id, name, price, quantity, maxQuantity, thumbnail } = req.body;
 
         if (
           typeof _id !== 'string' ||
           typeof name !== 'string' ||
           typeof price !== 'number' ||
           typeof quantity !== 'number' ||
-          typeof maxQuantity !== 'number'
+          typeof maxQuantity !== 'number' ||
+          typeof thumbnail !== 'string'
         ) {
           return res.status(400).json({ error: 'Invalid item data types' });
         }
@@ -76,7 +78,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse): void
           return res.status(409).json({ error: 'Item with the same ID already exists' });
         }
 
-        cartData.items.push({ _id, name, price, quantity, maxQuantity });
+        cartData.items.push({ _id, name, price, quantity, maxQuantity, thumbnail });
         cartData = updateCartTotals(cartData);
         writeCartData(cartData);
 

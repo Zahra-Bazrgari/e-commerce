@@ -54,7 +54,6 @@ const CartPage: React.FC = () => {
         <CartDetails
           totalPrice={totalPrice}
           totalQuantity={totalQuantity}
-          onClear={handleClearCart}
         />
       )}
     </div>

@@ -4,18 +4,52 @@
       "_id": "674f47bc500a93328b020a0b",
       "name": "کفش Clogs",
       "price": 1500000,
-      "quantity": 1,
-      "maxQuantity": 3
+      "quantity": 2,
+      "maxQuantity": 3,
+      "thumbnail": "products-674f47bc500a93328b020a0b-1735135056962.jpeg"
     },
     {
-      "_id": "674f4bd1500a93328b020a4f",
-      "name": "شلوار جین آبی روشن",
-      "price": 900000,
+      "_id": "674f4938500a93328b020a1d",
+      "name": "کفش لژ دار",
+      "price": 800000,
+      "quantity": 7,
+      "maxQuantity": 7,
+      "thumbnail": "products-thumbnails-default.jpeg"
+    },
+    {
+      "_id": "674f4906500a93328b020a15",
+      "name": "کفش پاپیون",
+      "price": 1200000,
       "quantity": 1,
-      "maxQuantity": 3
+      "maxQuantity": 1,
+      "thumbnail": "products-thumbnails-default.jpeg"
+    },
+    {
+      "_id": "674f470b500a93328b0209fb",
+      "name": "کفش پاشنه بلند Dior",
+      "price": 1700000,
+      "quantity": 1,
+      "maxQuantity": 5,
+      "thumbnail": "products-thumbnails-default.jpeg"
+    },
+    {
+      "_id": "674f4747500a93328b020a03",
+      "name": "کفش پاشنه بلند زرشکی",
+      "price": 3500000,
+      "quantity": 1,
+      "maxQuantity": 2,
+      "thumbnail": "products-thumbnails-default.jpeg"
+    },
+    {
+      "_id": "674f428c500a93328b0209d2",
+      "name": "هودی",
+      "price": 2000000,
+      "quantity": 1,
+      "maxQuantity": 20,
+      "thumbnail": "products-thumbnails-default.jpeg"
     }
   ],
-  "totalItems": 2,
-  "totalQuantity": 2,
-  "totalPrice": 2400000
+  "totalItems": 6,
+  "totalQuantity": 13,
+  "totalPrice": 17000000
 }
