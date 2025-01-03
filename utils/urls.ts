@@ -5,5 +5,6 @@ export const urls = {
     token: "auth/token",
   },
   products: "/products",
-  orders: "/orders"
+  orders: "/orders",
+  shipping: "/api/shippingData"
 };

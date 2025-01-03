@@ -29,7 +29,7 @@ export interface Order {
     deliveryDate: string;
     deliveryStatus: boolean;
 }
-export const createOrder = async (order: Order): Promise<any> => {
+export const createOrder = async (order: Order): Promise<OrdersResponse> => {
   const client = generateAxiosInstance();
   const response = await client.post(`${urls.orders}`, order);
   return response.data;

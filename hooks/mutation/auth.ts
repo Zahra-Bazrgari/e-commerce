@@ -1,15 +1,20 @@
-import { logInFunction, signUpFunction, refreshAccessToken } from '@/apis/auth.service';
-import { useMutation } from 'react-query';
-import { setSession } from '@/utils/session-manager';
-import { setRole } from '@/utils/role-manager';
+import {
+  logInFunction,
+  signUpFunction,
+  refreshAccessToken,
+} from "@/apis/auth.service";
+import { useMutation } from "react-query";
+import { setSession } from "@/utils/session-manager";
+import { setRole } from "@/utils/role-manager";
+import { setUserId } from "@/utils/id-manager";
 
 const startTokenRefreshTimer = (refreshToken: string) => {
   setTimeout(async () => {
     try {
       const newAccessToken = await refreshAccessToken(refreshToken);
-      setSession(newAccessToken); 
+      setSession(newAccessToken);
     } catch (error) {
-      console.error('Failed to refresh access token:', error);
+      console.error("Failed to refresh access token:", error);
     }
   }, 14 * 60 * 1000);
 };
@@ -20,6 +25,7 @@ export const useLogin = () => {
       const { accessToken, refreshToken } = data.token;
       setSession(accessToken);
       setRole(data.data.user.role);
+      setUserId(data.data.user._id);
       startTokenRefreshTimer(refreshToken);
     },
   });
@@ -31,7 +37,8 @@ export const useSignup = () => {
       const { accessToken, refreshToken } = data.token;
       setSession(accessToken);
       setRole(data.data.user.role);
-      startTokenRefreshTimer(refreshToken); 
+      setUserId(data.data.user._id);
+      startTokenRefreshTimer(refreshToken);
     },
   });
 };

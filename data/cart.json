@@ -47,9 +47,25 @@
       "quantity": 1,
       "maxQuantity": 20,
       "thumbnail": "products-thumbnails-default.jpeg"
+    },
+    {
+      "_id": "674f422e500a93328b0209ca",
+      "name": "پافر",
+      "price": 2000000,
+      "quantity": 1,
+      "maxQuantity": 30,
+      "thumbnail": "products-thumbnails-default.jpeg"
+    },
+    {
+      "_id": "674f42cb500a93328b0209da",
+      "name": "بافت",
+      "price": 2000000,
+      "quantity": 5,
+      "maxQuantity": 5,
+      "thumbnail": "products-thumbnails-default.jpeg"
     }
   ],
-  "totalItems": 6,
-  "totalQuantity": 13,
-  "totalPrice": 17000000
+  "totalItems": 8,
+  "totalQuantity": 19,
+  "totalPrice": 29000000
 }
