@@ -1,11 +1,8 @@
 "use client";
 import React from "react";
-import { removeFromCart } from "@/libs/redux/carSlice";
-import { AppDispatch } from "@/libs/redux/store";
 import { X } from "lucide-react";
-import { useDispatch } from "react-redux";
-import QuantityControl from '../controllers/QuantityControl';
-
+import { useRemoveFromCart, useUpdateQuantity } from "@/hooks/useCart";
+import QuantityControl from "../controllers/QuantityControl";
 
 interface CartItemProps {
   item: {
@@ -20,7 +17,24 @@ interface CartItemProps {
 }
 
 const CartItem: React.FC<CartItemProps> = ({ item }) => {
-  const dispatch = useDispatch<AppDispatch>();
+  const removeFromCartMutation = useRemoveFromCart();
+  const updateQuantityMutation = useUpdateQuantity();
+
+  const handleRemove = () => {
+    removeFromCartMutation.mutate({ _id: item._id });
+  };
+
+  const handleIncrement = () => {
+    if (item.quantity < item.maxQuantity) {
+      updateQuantityMutation.mutate({ _id: item._id, quantity: item.quantity + 1 });
+    }
+  };
+
+  const handleDecrement = () => {
+    if (item.quantity > 1) {
+      updateQuantityMutation.mutate({ _id: item._id, quantity: item.quantity - 1 });
+    }
+  };
 
   return (
     <div className="flex flex-col md:flex-row items-center justify-between border-b pb-4">
@@ -35,7 +49,7 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
           <p className="text-sm text-gray-600">{item.brand}</p>
         </div>
         <button
-          onClick={() => dispatch(removeFromCart({ _id: item._id }))}
+          onClick={handleRemove}
           className="ml-6 hover:text-gray-400 block md:hidden"
         >
           <X size={20} />
@@ -43,21 +57,20 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
       </div>
 
       <div className="w-full flex items-center justify-between">
-        {/* Quantity Control */}
         <QuantityControl
           itemId={item._id}
           quantity={item.quantity}
           maxQuantity={item.maxQuantity}
+          onIncrement={handleIncrement}
+          onDecrement={handleDecrement}
         />
 
-        {/* Price */}
         <p className="text-lg font-semibold ml-6 mt-3">
           {item.price * item.quantity} تومان
         </p>
 
-        {/* Remove */}
         <button
-          onClick={() => dispatch(removeFromCart({ _id: item._id }))}
+          onClick={handleRemove}
           className="ml-6 hover:text-gray-400 hidden md:block"
         >
           <X size={20} />

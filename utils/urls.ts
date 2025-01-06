@@ -3,7 +3,10 @@ export const urls = {
     login: "auth/login",
     signup: "auth/signup",
     token: "auth/token",
+    logout: "/auth/logout"
   },
   products: "/products",
-  orders: "/orders"
+  orders: "/orders",
+  shipping: "/api/shippingData",
+  users: "/users",
 };
