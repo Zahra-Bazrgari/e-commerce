@@ -10,7 +10,7 @@ const baseSchema = z.object({
 });
 
 export const shippingSchema = baseSchema.extend({
-  date: z.string().min(1, "لطفاً یک تاریخ انتخاب کنید"),
+  date: z.string().nonempty("تاریخ ارسال الزامی است"),
 });
 
 export const signUpSchema = baseSchema.extend({

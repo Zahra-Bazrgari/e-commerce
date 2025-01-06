@@ -13,7 +13,7 @@ interface CartDetailsProps {
 const CartDetails: React.FC<CartDetailsProps> = ({
   totalQuantity,
   totalPrice,
-  isValid,
+  isValid = true,
   onSave,
 }) => {
   const isLoggedIn = getSession();
@@ -52,23 +52,25 @@ const CartDetails: React.FC<CartDetailsProps> = ({
       )}
 
       {pagePath === "/cart/shipping" && (
-        <Link href={isLoggedIn ? "/checkout" : "/log-in"}>
-          <button
-            className={`w-full mt-6 py-3 ${
-              isValid
-                ? "bg-gray-900 hover:cursor-pointer"
-                : "bg-gray-800 hover:cursor-not-allowed"
-            }  text-white rounded-md font-bold hover:bg-gray-800`}
-            disabled={!isValid}
-            onClick={onSave}
-          >
-            {isLoggedIn ? (
-              <span>صفحه پرداخت</span>
-            ) : (
-              <span>ورود به حساب کاربری</span>
-            )}
-          </button>
-        </Link>
+        <button
+          className={`w-full mt-6 py-3 ${
+            isValid
+              ? "bg-gray-900 hover:cursor-pointer"
+              : "bg-gray-800 hover:cursor-not-allowed"
+          }  text-white rounded-md font-bold hover:bg-gray-800`}
+          disabled={!isValid}
+          onClick={() => {
+            if (isValid && onSave) {
+              onSave();
+            }
+          }}
+        >
+          {isLoggedIn ? (
+            <span>صفحه پرداخت</span>
+          ) : (
+            <span>ورود به حساب کاربری</span>
+          )}
+        </button>
       )}
     </div>
   );

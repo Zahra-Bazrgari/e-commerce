@@ -13,7 +13,8 @@ import QuantityControl from "@/components/controllers/QuantityControl";
 import { Trash } from "lucide-react";
 import { getSession } from "@/utils/session-manager";
 import { useRouter } from "next/navigation";
-import { useSaveShippingData } from "@/hooks/useShipping";
+import { getUserInfo } from "@/utils/user-manager";
+import updateUser from "@/apis/users.service";
 
 type ShippingFormData = {
   name: string;
@@ -25,49 +26,61 @@ type ShippingFormData = {
 
 export default function ShippingPage() {
   const router = useRouter();
-  const [session, setSession] = useState<string | null>(null);
   const [isLoadingSession, setLoadingSession] = useState(true);
 
-  const saveShippingDataMutation = useSaveShippingData();
-
   useEffect(() => {
-    const fetchSession = async () => {
-      const currentSession = getSession();
-      setSession(currentSession);
-      setLoadingSession(false);
+    const currentSession = getSession();
 
-      if (!currentSession) {
-        router.push("/404");
-      }
-    };
-
-    fetchSession();
+    if (!currentSession) {
+      router.push("/404");
+      return;
+    }
+    setLoadingSession(false);
   }, [router]);
 
   const { data: cartData, isLoading: isCartLoading } = useCart();
   const removeFromCartMutation = useRemoveFromCart();
   const updateQuantityMutation = useUpdateQuantity();
 
+  const userInfo = getUserInfo();
+
   const {
     register,
     setValue,
-    formState: { errors, isValid },
     getValues,
+    formState: { errors, isValid },
   } = useForm<ShippingFormData>({
     resolver: zodResolver(shippingSchema),
     mode: "onChange",
+    defaultValues: {
+      name: userInfo?.firstname || "",
+      lastName: userInfo?.lastname || "",
+      address: userInfo?.address || "",
+      phoneNumber: userInfo?.phoneNumber || "",
+    },
   });
 
-  const onSave = () => {
-    const formData = getValues();
-    saveShippingDataMutation.mutate(formData, {
-      onSuccess: () => {
-        router.push("/checkout");
-      },
-      onError: (error) => {
-        console.error("Error saving shipping data:", error);
-      },
-    });
+  const onSave = async () => {
+    const { address, phoneNumber, date } = getValues();
+
+    try {
+      if (userInfo?.userId) {
+        if (address !== userInfo.address || phoneNumber !== userInfo.phoneNumber) {
+          await updateUser(userInfo.userId, { address, phoneNumber });
+        }
+      }
+
+      if (!date) {
+        alert("لطفاً تاریخ ارسال را انتخاب کنید.");
+        return;
+      }
+
+      localStorage.setItem("deliveryDate", date);
+      router.push("/checkout");
+    } catch (error) {
+      console.error("Error during saving or updating:", error);
+      alert("خطا در ذخیره اطلاعات. لطفاً دوباره تلاش کنید.");
+    }
   };
 
   if (isLoadingSession || isCartLoading) {
@@ -97,61 +110,63 @@ export default function ShippingPage() {
   };
 
   return (
-    <div className='flex flex-col p-8'>
-      <div className='flex flex-col lg:flex-row w-full p-8'>
-        <div className='w-full lg:w-2/3'>
-          <div className='mb-6 border-b-2 pb-3 px-5'>
-            <span className='text-3xl font-bold'>اطلاعات شما</span>
+    <div className="flex flex-col p-8">
+      <div className="flex flex-col lg:flex-row w-full p-8">
+        <div className="w-full lg:w-2/3">
+          <div className="mb-6 border-b-2 pb-3 px-5">
+            <span className="text-3xl font-bold">اطلاعات شما</span>
           </div>
-          <form className='w-full flex flex-col gap-6'>
-            <div className='grid w-full grid-cols-1 md:grid-cols-2 gap-5 mb-4'>
+          <form className="w-full flex flex-col gap-6">
+            <div className="grid w-full grid-cols-1 md:grid-cols-2 gap-5 mb-4">
               <div>
-                <label className='block mb-2'>نام:</label>
+                <label className="block mb-2">نام:</label>
                 <Input
                   {...register("name")}
-                  placeholder='نام خود را وارد کنید'
+                  placeholder="نام خود را وارد کنید"
                   error={errors.name?.message}
+                  disabled
                 />
               </div>
 
               <div>
-                <label className='block mb-2'>نام خانوادگی:</label>
+                <label className="block mb-2">نام خانوادگی:</label>
                 <Input
                   {...register("lastName")}
-                  placeholder='نام خانوادگی خود را وارد کنید'
+                  placeholder="نام خانوادگی خود را وارد کنید"
                   error={errors.lastName?.message}
+                  disabled
                 />
               </div>
             </div>
 
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-5 mb-4'>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-4">
               <div>
-                <label className='block mb-2'>شماره تلفن:</label>
+                <label className="block mb-2">شماره تلفن:</label>
                 <Input
                   {...register("phoneNumber")}
-                  placeholder='شماره تلفن خود را وارد کنید'
+                  placeholder="شماره تلفن خود را وارد کنید"
                   error={errors.phoneNumber?.message}
                 />
               </div>
 
               <div>
-                <label className='block mb-2'>تاریخ ارسال:</label>
+                <label className="block mb-2">تاریخ ارسال:</label>
                 <CalendarComponent
                   onDateChange={(date) => setValue("date", date)}
                 />
                 {!!errors.date?.message && (
-                  <p className='text-red-400 text-xs font-semibold capitalize mt-2'>
+                  <p className="text-red-400 text-xs font-semibold capitalize mt-2">
                     {errors.date.message}
                   </p>
                 )}
               </div>
             </div>
 
-            <div className='mb-4'>
-              <label className='block mb-2'>آدرس:</label>
+            <div className="mb-4">
+              <label className="block mb-2">آدرس:</label>
               <Input
                 {...register("address")}
-                placeholder='آدرس خود را وارد کنید'
+                placeholder="آدرس خود را وارد کنید"
                 error={errors.address?.message}
               />
             </div>
@@ -169,20 +184,20 @@ export default function ShippingPage() {
       </div>
 
       <div>
-        <div className='my-8 border-b-2 pb-3 px-5'>
-          <span className='text-xl font-bold'>سبد خرید</span>
+        <div className="my-8 border-b-2 pb-3 px-5">
+          <span className="text-xl font-bold">سبد خرید</span>
         </div>
-        <div className='flex overflow-x-auto scrollbar-hide'>
-          <div className='flex overflow-y-hidden overflow-x-scroll scrollbar-hide gap-5'>
+        <div className="flex overflow-x-auto scrollbar-hide">
+          <div className="flex overflow-y-hidden overflow-x-scroll scrollbar-hide gap-5">
             {items.map((item) => (
-              <div key={item._id} className='flex flex-col items-center'>
+              <div key={item._id} className="flex flex-col items-center">
                 <img
                   src={`http://localhost:8000/images/products/thumbnails/${item.thumbnail}`}
                   alt={item.name}
-                  className='w-40 h-40 object-cover mb-2 rounded-lg'
+                  className="w-40 h-40 object-cover mb-2 rounded-lg"
                 />
-                <span className='font-semibold'>{item.name}</span>
-                <div className='flex gap-2 items-center mt-2'>
+                <span className="font-semibold">{item.name}</span>
+                <div className="flex gap-2 items-center mt-2">
                   <QuantityControl
                     itemId={item._id}
                     quantity={item.quantity}
@@ -194,7 +209,7 @@ export default function ShippingPage() {
                   />
                   <button
                     onClick={() => handleRemove(item._id)}
-                    className='text-red-600 hover:text-red-800'
+                    className="text-red-600 hover:text-red-800"
                   >
                     <Trash size={20} />
                   </button>

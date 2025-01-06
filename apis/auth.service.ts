@@ -7,7 +7,7 @@ import {
 } from "@/types/auth.types";
 import { clearSession, setSession } from "@/utils/session-manager";
 import { clearRole } from "@/utils/role-manager";
-import { clearUserId } from "@/utils/id-manager";
+import { deleteUserInfo } from '@/utils/user-manager';
 
 type loginFuncType = (data: ILoginRequest) => Promise<IAuthResponse>;
 
@@ -36,14 +36,26 @@ export const refreshAccessToken = async (refreshToken: string) => {
     setSession(newAccessToken);
     return newAccessToken;
   } catch (error) {
-    console.error("Failed to refresh access token:", error);
+    console.log("Failed to refresh access token:", error);
     throw error;
   }
 };
 
-export const signOut = () => {
-  clearSession();
-  clearRole();
-  clearUserId();
-  console.log("User has been signed out successfully.");
+export const signOut = async () => {
+  const client = generateAxiosInstance();
+
+  try {
+    const response = await client.get(urls.auth.logout);
+
+    if (response.status === 200 || response.status === 204) {
+      clearSession();
+      clearRole();
+      deleteUserInfo();
+      console.log("User has been signed out successfully.");
+    } else {
+      console.warn("Unexpected logout response:", response);
+    }
+  } catch (error) {
+    console.error("Failed to log out:", error);
+  }
 };

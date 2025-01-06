@@ -9,7 +9,6 @@ export const getSession = () => {
 
 export const setSession = (token: string) => {
   setCookie(null, COOKIE_NAME, token, {
-    maxAge: 14 * 60, //14 mins
     path: "/",
     secure: process.env.NODE_ENV === "production",
     httpOnly: false,
