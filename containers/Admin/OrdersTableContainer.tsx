@@ -4,19 +4,30 @@ import React, { useState } from "react";
 import { useFetchOrdersWithDetails } from "@/hooks/useQuery/useFetchOrders";
 import Table from "@/components/Table";
 import Pagination from "@/components/Pagination";
-import { OrderDetails } from '@/types/orders.type';
+import { OrderDetails } from "@/types/orders.type";
+import { editDeliveryStatus } from '@/apis/orders.service';
 
 
 const OrdersTable = () => {
   const [page, setPage] = useState<number>(1);
   const [limit] = useState<number>(5);
 
-  const { data, isLoading, isError } = useFetchOrdersWithDetails(page, limit);
+  const { data, isLoading, isError, refetch } = useFetchOrdersWithDetails(page, limit);
 
   if (isLoading) return <div className="text-center py-8">در حال بارگذاری...</div>;
   if (isError) return <div className="text-center text-red-500 py-8">خطا در دریافت سفارش‌ها.</div>;
 
   const { detailedOrders = [], totalPages = 0 } = data || {};
+
+  const toggleDeliveryStatus = async (order: OrderDetails) => {
+    try {
+      const updatedStatus = !order.deliveryStatus;
+      await editDeliveryStatus(order._id, updatedStatus);
+      refetch();
+    } catch (error) {
+      console.error("Error updating delivery status:", error);
+    }
+  };
 
   const columns = [
     {
@@ -35,15 +46,16 @@ const OrdersTable = () => {
     {
       label: "وضعیت تحویل",
       render: (order: OrderDetails) => (
-        <span
-          className={`px-2 py-1 rounded-md text-sm ${
+        <button
+          onClick={() => toggleDeliveryStatus(order)}
+          className={`px-2 py-1 rounded-md text-sm cursor-pointer ${
             order.deliveryStatus
               ? "bg-green-100 text-green-800"
               : "bg-red-100 text-red-800"
           }`}
         >
           {order.deliveryStatus ? "تحویل داده شده" : "در انتظار"}
-        </span>
+        </button>
       ),
     },
     {

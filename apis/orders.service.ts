@@ -77,3 +77,11 @@ export const createOrder = async () => {
     throw error;
   }
 };
+
+export const editDeliveryStatus = async (orderId: string, deliveryStatus: boolean) => {
+  const client = generateAxiosInstance()
+  const response = await client.patch(`${urls.orders}/${orderId}`, {
+    deliveryStatus,
+  });
+  return response.data;
+};
